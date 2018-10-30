@@ -25,18 +25,36 @@ weight = 7
   icon = "r-project"
   icon_pack = "fab"
   name = "R"
-  description = "90%"
+  description = "80%"
   
 [[feature]]
-  icon = "chart-line"
+  icon = "users"
   icon_pack = "fas"
-  name = "Statistics"
-  description = "100%"  
+  name = "Leadership Development"
+  description = "80%"  
   
 [[feature]]
-  icon = "camera-retro"
+  icon = "cogs"
   icon_pack = "fas"
-  name = "Photography"
-  description = "10%"
+  name = "Project Management"
+  description = "80%"
+  
+[[feature]]
+  icon = "lightbulb"
+  icon_pack = "fas"
+  name = "Design Thinking"
+  description = "70%"
+  
+[[feature]]
+  icon = "comments"
+  icon_pack = "fas"
+  name = "Community Engagement"
+  description = "50%"
+  
+[[feature]]
+  icon = "tachometer-alt"
+  icon_pack = "fas"
+  name = "Business Intelligence"
+  description = "80%"
 
 +++
