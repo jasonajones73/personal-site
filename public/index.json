@@ -19,6 +19,29 @@
     "type": "docs"
   },
   {
+    "authors": [
+      "Jason Jones"
+    ],
+    "categories": null,
+    "content": "",
+    "date": 1515474000,
+    "expirydate": -62135596800,
+    "kind": "page",
+    "lang": "en",
+    "lastmod": 1515474000,
+    "objectID": "c91f9fa5241d0f4fa5c8c444fc0484f9",
+    "permalink": "/publication/i-have-to-ask-you/",
+    "publishdate": "2018-01-09T00:00:00-05:00",
+    "relpermalink": "/publication/i-have-to-ask-you/",
+    "section": "publication",
+    "summary": "Apparently ELGL co-founder Kent Wyatt moonlights as a private background investigator, diving deep into the past lives of all of his ELGL family. Sometimes I forget that I spent five years as a track and field athlete while also receiving a quality education at North Carolina State University. I mean, it isn’t really something that you whip out of your “fun facts bag” all that frequently. Discussing the intricate physics of spinning in a circle with a sixteen pound cast iron ball before releasing it in a blur of chalk dust and grunting doesn’t make for the best dinner conversation.",
+    "tags": [
+      "ELGL"
+    ],
+    "title": "I Have to Ask You",
+    "type": "publication"
+  },
+  {
     "authors": [],
     "categories": null,
     "content": "Click on the Slides button above to view the built-in slides feature.\n Slides can be added in a few ways:\n Create slides using Academic\u0026rsquo;s Slides feature and link using url_slides parameter in the front matter of the talk file Upload an existing slide deck to static/ and link using url_slides parameter in the front matter of the talk file Embed your slides (e.g. Google Slides) or presentation video on this page using shortcodes.  Further talk details can easily be added to this page using Markdown and $\\rm \\LaTeX$ math code.\n",
@@ -145,28 +168,6 @@
     ],
     "title": "Hello R Markdown",
     "type": "post"
-  },
-  {
-    "authors": [
-      "GA Cushen",
-      "MS Nixon"
-    ],
-    "categories": null,
-    "content": "More detail can easily be written here using Markdown and $\\rm \\LaTeX$ math code.\n",
-    "date": 1372651200,
-    "expirydate": -62135596800,
-    "kind": "page",
-    "lang": "en",
-    "lastmod": 1372651200,
-    "objectID": "2b4d919e3cf73dfcd0063c88fe01cb00",
-    "permalink": "/publication/clothing-search/",
-    "publishdate": "2013-07-01T00:00:00-04:00",
-    "relpermalink": "/publication/clothing-search/",
-    "section": "publication",
-    "summary": "We present a mobile visual clothing search system whereby a smart phone user can either choose a social networking photo or take a new photo of a person wearing clothing of interest and search for similar clothing in a retail database. From the query image, the person is detected, clothing is segmented, and clothing features are extracted and quantized. The information is sent from the phone client to a server, where the feature vector of the query image is used to retrieve similar clothing products from online databases. The phone's GPS location is used to re-rank results by retail store location. State of the art work focuses primarily on the recognition of a diverse range of clothing offline and pays little attention to practical applications. Evaluated on a challenging dataset, the system is relatively fast and achieves promising results.",
-    "tags": [],
-    "title": "Mobile visual clothing search",
-    "type": "publication"
   },
   {
     "authors": null,
