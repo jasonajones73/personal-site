@@ -31,6 +31,11 @@ weight = 5
   course = "Innovation by Design"
   institution = "Duke University"
   year = 2017
+
+[[education.courses]]
+  course = "Business & Human Resources Executive Development"
+  institution = "UNC-Chapel Hill"
+  year = 2014
  
 +++
 

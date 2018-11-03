@@ -7,20 +7,40 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Sun, 02 Sep 2018 21:09:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Health and Economic Impact of Storms and Severe Weather Events</title>
+      <link>/post/2018-09-02-reproducible-research/</link>
+      <pubDate>Sun, 02 Sep 2018 21:09:00 +0000</pubDate>
       
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/post/2018-09-02-reproducible-research/</guid>
+      <description>Synopsis In this analysis I amd concerned with two primary points. Which event types have the greatest health impact and the greatest economic impact. I begin my work with data processing to create usable objects for results visualization. I finish my analysis with two plots and a final table.
+ Package Load Load packages required for analysis.
+require(tidyverse) require(lubridate) require(kableExtra)  Data Import Leveraging read_csv from the readr packackge included with tidyverse to import the dataset.</description>
+    </item>
+    
+    <item>
+      <title>City of Raleigh Budget Sentiment Analysis</title>
+      <link>/post/2018-04-29-raleigh-sentiment/</link>
+      <pubDate>Sun, 29 Apr 2018 21:09:00 +0000</pubDate>
+      
+      <guid>/post/2018-04-29-raleigh-sentiment/</guid>
+      <description>Package Import Load necessary packages and set one global option.
+library(tidyverse) library(pdftools) library(tidytext) library(knitr) library(kableExtra) options(stringsAsFactors = FALSE)  Retrieve File Download the file from the City of Raleigh website, read that file in as a character vector, and delete the downloaded file from the directory.
+download.file(&amp;quot;https://www.raleighnc.gov/content/BudgetManagement/Documents/Budget/Archive/2018/FY2018AdoptedBudget20160612.pdf&amp;quot;, &amp;quot;FY2018AdoptedBudget.pdf&amp;quot;, mode = &amp;quot;wb&amp;quot;) txt = pdf_text(&amp;quot;FY2018AdoptedBudget.pdf&amp;quot;) unlink(&amp;quot;FY2018AdoptedBudget.pdf&amp;quot;)  Create Data Frame Create a page number character vector, create a data frame by binding the page number character vector with the extracted text, and finally “unnest” all of the page text into individual words.</description>
+    </item>
+    
+    <item>
+      <title>Estimating Pay-As-You-Throw (PAYT) Cost Recovery Rate</title>
+      <link>/post/2017-11-20-payt-estimate/</link>
+      <pubDate>Mon, 20 Nov 2017 21:09:00 +0000</pubDate>
+      
+      <guid>/post/2017-11-20-payt-estimate/</guid>
+      <description>Introduction As a different approach to this exercise, I would like to avoid traditional Microsoft Excel analysis and deliver my product in a fully reproducible R Markdown format. I will attempt to walk you through my thought process in a simple fashion, including all code chunks and formulas. If this analysis is consistent with a best practice approach, it can be made available to others for reproduction. The transparency and reproducibility of R Markdown allows for others to easily understand, critique and augment the analysis.</description>
     </item>
     
   </channel>

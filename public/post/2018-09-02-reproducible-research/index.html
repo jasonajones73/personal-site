@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 3.0.0">
+  <meta name="generator" content="Hugo 0.50" />
+  <meta name="author" content="Jason Jones">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="Synopsis In this analysis I amd concerned with two primary points. Which event types have the greatest health impact and the greatest economic impact. I begin my work with data processing to create usable objects for results visualization. I finish my analysis with two plots and a final table.
+ Package Load Load packages required for analysis.
+require(tidyverse) require(lubridate) require(kableExtra)  Data Import Leveraging read_csv from the readr packackge included with tidyverse to import the dataset.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/2018-09-02-reproducible-research/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Academic">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Academic">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/2018-09-02-reproducible-research/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@packpridejones">
+  <meta property="twitter:creator" content="@packpridejones">
+  
+  <meta property="og:site_name" content="Academic">
+  <meta property="og:url" content="/post/2018-09-02-reproducible-research/">
+  <meta property="og:title" content="Health and Economic Impact of Storms and Severe Weather Events | Academic">
+  <meta property="og:description" content="Synopsis In this analysis I amd concerned with two primary points. Which event types have the greatest health impact and the greatest economic impact. I begin my work with data processing to create usable objects for results visualization. I finish my analysis with two plots and a final table.
+ Package Load Load packages required for analysis.
+require(tidyverse) require(lubridate) require(kableExtra)  Data Import Leveraging read_csv from the readr packackge included with tidyverse to import the dataset.">
+  
+  
+    
+  <meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-09-02T21:09:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2018-09-02T21:09:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>Health and Economic Impact of Storms and Severe Weather Events | Academic</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Academic</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#publications_selected">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/tutorial/">
+            
+            <span>Tutorials</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Health and Economic Impact of Storms and Severe Weather Events</h1>
+
+  
+
+  
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Jones">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2018-09-02 21:09:00 &#43;0000 &#43;0000" itemprop="datePublished">
+    <time datetime="2018-09-02 21:09:00 &#43;0000 &#43;0000" itemprop="dateModified">
+      Sep 2, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Jones">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    5 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/r/">R</a>
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Health%20and%20Economic%20Impact%20of%20Storms%20and%20Severe%20Weather%20Events&amp;url=%2fpost%2f2018-09-02-reproducible-research%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2f2018-09-02-reproducible-research%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2f2018-09-02-reproducible-research%2f&amp;title=Health%20and%20Economic%20Impact%20of%20Storms%20and%20Severe%20Weather%20Events"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2f2018-09-02-reproducible-research%2f&amp;title=Health%20and%20Economic%20Impact%20of%20Storms%20and%20Severe%20Weather%20Events"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Health%20and%20Economic%20Impact%20of%20Storms%20and%20Severe%20Weather%20Events&amp;body=%2fpost%2f2018-09-02-reproducible-research%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="synopsis" class="section level2">
+<h2>Synopsis</h2>
+<p>In this analysis I amd concerned with two primary points. Which event types have the greatest health impact and the greatest economic impact. I begin my work with data processing to create usable objects for results visualization. I finish my analysis with two plots and a final table.</p>
+</div>
+<div id="package-load" class="section level2">
+<h2>Package Load</h2>
+<p>Load packages required for analysis.</p>
+<pre class="r"><code>require(tidyverse)
+require(lubridate)
+require(kableExtra)</code></pre>
+</div>
+<div id="data-import" class="section level2">
+<h2>Data Import</h2>
+<p>Leveraging <code>read_csv</code> from the <code>readr</code> packackge included with <code>tidyverse</code> to import the dataset.</p>
+<pre class="r"><code>weather_dat = read_csv(&quot;data/repdata%2Fdata%2FStormData.csv.bz2&quot;)</code></pre>
+</div>
+<div id="data-processing" class="section level2">
+<h2>Data Processing</h2>
+<p>The first thing I want to do is convert <code>BGN_DATE</code> to a usable longitudinal variable. I am doing this so I can provide change-over-time information as I attempt to answer both questions presented. I am storing the result as a new object so I don’t mess with my original data import object.</p>
+<pre class="r"><code>new_dat = weather_dat %&gt;%
+  mutate(BGN_DATE = str_trim(str_extract(BGN_DATE, &quot;^\\S+\\s+&quot;))) %&gt;%
+  mutate(BGN_DATE = as.POSIXct(BGN_DATE, format = &quot;%m/%d/%Y&quot;))</code></pre>
+<p>I also want to select the most recent ten years of data. Even though there are data points from 1950-01-03 to 2011-11-30, there are a lot of gaps in data collection the farther back you go.</p>
+<pre class="r"><code>new_dat = new_dat %&gt;%
+  filter(year(BGN_DATE) &gt;= (year(max(BGN_DATE)) - 10))</code></pre>
+<div id="question-1-processing" class="section level3">
+<h3>Question 1 Processing</h3>
+<p>I want to attempt to provide my version of an answer to question 1 in three steps. This section will deal with data processing and later I will work through visual creation. The first thing I am doing is creating a fatalities object representative of the top 10 fatality causing event types.</p>
+<pre class="r"><code>quest_1_fat = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(fatalities_count = sum(FATALITIES)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, fatalities_count)</code></pre>
+<p>The next step is to create an injuries object representative of the top 10 injury causing event types. You will notice this step is just a simple modification of the first.</p>
+<pre class="r"><code>quest_1_inj = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(injury_count = sum(INJURIES)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, injury_count)</code></pre>
+<p>The third and final step starts by filtering for event types that are common between <code>quest_1_fat</code> and <code>quest_1_inj</code>, then consolidates data points by month, sums up injuries and fatalities by event type, and then finally gathers injuries and fatalities into one variable.</p>
+<pre class="r"><code>quest_1_final = new_dat %&gt;%
+  filter(EVTYPE %in% quest_1_fat$EVTYPE &amp; EVTYPE %in% quest_1_inj$EVTYPE) %&gt;%
+  mutate(BGN_DATE = floor_date(BGN_DATE, unit = &quot;1 month&quot;)) %&gt;%
+  group_by(BGN_DATE, EVTYPE) %&gt;%
+  summarise_at(c(&quot;INJURIES&quot;, &quot;FATALITIES&quot;), sum) %&gt;%
+  ungroup() %&gt;%
+  gather(&quot;measure&quot;, &quot;count&quot;, 3:4)</code></pre>
+</div>
+<div id="question-2-processing" class="section level3">
+<h3>Question 2 Processing</h3>
+<p>To begin question two, I am writing a function to help me convert the character values for thousand, million, and billion to their numeric value as a multiplier for the <code>PROPDMG</code> and <code>CROPDMG</code> variables.</p>
+<pre class="r"><code>f = function(dat) {
+  if(dat == &quot;K&quot;) {
+    1000
+  } else if (dat == &quot;M&quot;) {
+    1000000
+  } else if (dat == &quot;B&quot;) {
+    1000000000
+  } else {
+    NA
+  }
+}</code></pre>
+<p>Next, I filter out <code>NA</code> values for property and crop damage, create two new variables that replace the character values with integer multipliers, and then calculate actual property and crop damage values.</p>
+<pre class="r"><code>new_dat = new_dat %&gt;%
+  filter(is.na(PROPDMGEXP) == FALSE) %&gt;%
+  filter(is.na(CROPDMGEXP) == FALSE) %&gt;%
+  mutate(prop_mult = as.integer(map_chr(.x = PROPDMGEXP, .f = f))) %&gt;%
+  mutate(crop_mult = as.integer(map_chr(.x = CROPDMGEXP, .f = f))) %&gt;%
+  mutate(prop_dmg = PROPDMG * prop_mult) %&gt;%
+  mutate(crop_dmg = CROPDMG * crop_mult)</code></pre>
+<p>Very similar to question one, I am now going to look at the top ten event types by total property damage over the last ten years.</p>
+<pre class="r"><code>quest_2_prop = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(total_dmg = sum(prop_dmg)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, total_dmg)</code></pre>
+<p>Here again, I am creating an object that has the top ten event types by total crop damage over the last ten years.</p>
+<pre class="r"><code>quest_2_crop = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(total_dmg = sum(crop_dmg)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, total_dmg)</code></pre>
+<p>As a final step, I am creating an object that filters for only event types that occur in both top ten lists and then calculates total property and crop damage over time.</p>
+<pre class="r"><code>quest_2_final = new_dat %&gt;%
+filter(EVTYPE %in% quest_2_prop$EVTYPE &amp; EVTYPE %in% quest_2_crop$EVTYPE) %&gt;%
+  mutate(BGN_DATE = floor_date(BGN_DATE, unit = &quot;1 month&quot;)) %&gt;%
+  group_by(BGN_DATE, EVTYPE) %&gt;%
+  summarise_at(c(&quot;prop_dmg&quot;, &quot;crop_dmg&quot;), sum) %&gt;%
+  ungroup() %&gt;%
+  gather(&quot;measure&quot;, &quot;total_dmg&quot;, 3:4)</code></pre>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<div id="question-1-results" class="section level3">
+<h3>Question 1 Results</h3>
+<p>The goal of this plot is to show the most impactful event types over the past ten years. For this, I am using a faceted <code>ggplot</code> column visualization.</p>
+<pre class="r"><code>quest_1_final %&gt;%
+  ggplot(aes(as.character(year(BGN_DATE)), count, fill = measure)) +
+  geom_col() +
+  facet_wrap(~EVTYPE, scales = &quot;free_y&quot;) +
+  theme(text = element_text(family = &quot;Roboto&quot;),
+        legend.position = &quot;bottom&quot;,
+        axis.text.x = element_text(angle = 90, vjust = 0.5),
+        axis.title = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_rect(fill = &quot;#146a90&quot;),
+        strip.text = element_text(color = &quot;white&quot;, face = &quot;bold&quot;)) +
+  scale_fill_viridis_d(&quot;&quot;, direction = -1)</code></pre>
+<p><img src="/post/2018-09-02-reproducible-research_files/figure-html/unnamed-chunk-13-1.png" width="100%" /></p>
+</div>
+<div id="question-2-results" class="section level3">
+<h3>Question 2 Results</h3>
+<p>As with question one, the goal of this plot is to show the most impactful event types over the past ten years in terms of property and crop damage. For this, I am using a faceted <code>ggplot</code> column visualization that is modeled after the question one plot for consistency.</p>
+<pre class="r"><code>quest_2_final %&gt;%
+  ggplot(aes(as.character(year(BGN_DATE)), total_dmg/1000000, fill = measure)) +
+  geom_col() +
+  facet_wrap(~EVTYPE, scales = &quot;free_y&quot;) +
+  theme(text = element_text(family = &quot;Roboto&quot;),
+        legend.position = &quot;bottom&quot;,
+        axis.text.x = element_text(angle = 90, vjust = 0.5),
+        axis.title.x = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_rect(fill = &quot;#146a90&quot;),
+        strip.text = element_text(color = &quot;white&quot;, face = &quot;bold&quot;)) +
+  labs(y = &quot;Total Damage (millions)&quot;) +
+  scale_fill_viridis_d(&quot;&quot;, direction = -1, labels = c(&quot;Crop Damage&quot;, &quot;Property Damage&quot;)) +
+  scale_y_continuous(labels = scales::dollar_format())</code></pre>
+<p><img src="/post/2018-09-02-reproducible-research_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
+</div>
+<div id="overall" class="section level3">
+<h3>Overall</h3>
+<p>What about the worst in terms of economic impact and health? If you look at both question one and two results you will find only one event type consistent between both.</p>
+<pre class="r"><code>new_dat %&gt;%
+  filter(EVTYPE %in% quest_1_fat$EVTYPE &amp;
+           EVTYPE %in% quest_1_inj$EVTYPE &amp;
+           EVTYPE %in% quest_2_prop$EVTYPE &amp;
+           EVTYPE %in% quest_2_crop$EVTYPE) %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise_at(c(&quot;INJURIES&quot;, &quot;FATALITIES&quot;, &quot;CROPDMG&quot;, &quot;PROPDMG&quot;), sum) %&gt;%
+  kable(format = &quot;html&quot;,
+        align = &quot;lcccc&quot;,
+        col.names = c(&quot;Event Type&quot;, &quot;Injuries&quot;, &quot;Fatalities&quot;, &quot;Crop Damage&quot;, &quot;Property Damage&quot;),
+        format.args = list(big.mark = &quot;,&quot;)) %&gt;%
+  kable_styling(full_width = TRUE)</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Event Type
+</th>
+<th style="text-align:center;">
+Injuries
+</th>
+<th style="text-align:center;">
+Fatalities
+</th>
+<th style="text-align:center;">
+Crop Damage
+</th>
+<th style="text-align:center;">
+Property Damage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+THUNDERSTORM WIND
+</td>
+<td style="text-align:center;">
+1,400
+</td>
+<td style="text-align:center;">
+130
+</td>
+<td style="text-align:center;">
+66,663
+</td>
+<td style="text-align:center;">
+862,257.4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/r-markdown/">R Markdown</a>
+  
+  <a class="badge badge-light" href="/tags/analysis/">analysis</a>
+  
+  <a class="badge badge-light" href="/tags/reproducible/">reproducible</a>
+  
+</div>
+
+
+
+    
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  <img class="portrait mr-3" src="https://s.gravatar.com/avatar/d770b45a3dbfa7425fda39682eb20681?s=200')" itemprop="image" alt="Avatar">
+  
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/">Jason Jones</a></h5>
+    <h6 class="card-subtitle">Analytics &amp; Innovation Manager</h6>
+    
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="/#contact" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://twitter.com/packpridejones" target="_blank" rel="noopener">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.linkedin.com/in/jason-jones-b32aab5a" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/jasonajones73" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+
+    
+    
+    <div class="article-widget">
+      <div class="hr-light"></div>
+      <h3>Related</h3>
+      <ul>
+        
+        <li><a href="/post/2017-11-20-payt-estimate/">Estimating Pay-As-You-Throw (PAYT) Cost Recovery Rate</a></li>
+        
+        <li><a href="/post/2018-04-29-raleigh-sentiment/">City of Raleigh Budget Sentiment Analysis</a></li>
+        
+      </ul>
+    </div>
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+  <p class="powered-by">
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
+  
+
+  <p class="powered-by">
+    &copy; 2018 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "Search Results",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    <script src="/js/search.js"></script>
+    
+
+    
+    
+
+  </body>
+</html>
+

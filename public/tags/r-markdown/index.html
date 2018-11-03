@@ -105,7 +105,7 @@
   <meta property="og:image" content="/img/icon-192.png">
   <meta property="og:locale" content="en-us">
   
-  <meta property="og:updated_time" content="2015-07-23T21:13:14-05:00">
+  <meta property="og:updated_time" content="2018-09-02T21:09:00&#43;00:00">
   
 
   
@@ -299,12 +299,32 @@
   
   
   <div>
-    <h2><a href="/post/2015-07-23-r-rmarkdown/">Hello R Markdown</a></h2>
+    <h2><a href="/post/2018-09-02-reproducible-research/">Health and Economic Impact of Storms and Severe Weather Events</a></h2>
     <div class="article-style">
       
-      R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.
+      Synopsis In this analysis I amd concerned with two primary points. Which event types have the greatest health impact and the greatest economic impact. I begin my work with data processing to create usable objects for results visualization. I finish my analysis with two plots and a final table.
+ Package Load Load packages required for analysis.
+require(tidyverse) require(lubridate) require(kableExtra)  Data Import Leveraging read_csv from the readr packackge included with tidyverse to import the dataset.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/2018-04-29-raleigh-sentiment/">City of Raleigh Budget Sentiment Analysis</a></h2>
+    <div class="article-style">
+      
+      Package Import Load necessary packages and set one global option.
+library(tidyverse) library(pdftools) library(tidytext) library(knitr) library(kableExtra) options(stringsAsFactors = FALSE)  Retrieve File Download the file from the City of Raleigh website, read that file in as a character vector, and delete the downloaded file from the directory.
+download.file(&quot;https://www.raleighnc.gov/content/BudgetManagement/Documents/Budget/Archive/2018/FY2018AdoptedBudget20160612.pdf&quot;, &quot;FY2018AdoptedBudget.pdf&quot;, mode = &quot;wb&quot;) txt = pdf_text(&quot;FY2018AdoptedBudget.pdf&quot;) unlink(&quot;FY2018AdoptedBudget.pdf&quot;)  Create Data Frame Create a page number character vector, create a data frame by binding the page number character vector with the extracted text, and finally “unnest” all of the page text into individual words.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/2017-11-20-payt-estimate/">Estimating Pay-As-You-Throw (PAYT) Cost Recovery Rate</a></h2>
+    <div class="article-style">
+      
+      Introduction As a different approach to this exercise, I would like to avoid traditional Microsoft Excel analysis and deliver my product in a fully reproducible R Markdown format. I will attempt to walk you through my thought process in a simple fashion, including all code chunks and formulas. If this analysis is consistent with a best practice approach, it can be made available to others for reproduction. The transparency and reproducibility of R Markdown allows for others to easily understand, critique and augment the analysis.
       
     </div>
   </div>

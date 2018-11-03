@@ -1,0 +1,198 @@
+---
+title: "Health and Economic Impact of Storms and Severe Weather Events"
+author: "Jason Jones"
+date: 2018-09-02T21:09:00-00:00
+categories: ["R"]
+tags: ["R Markdown", "analysis", "reproducible"]
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="synopsis" class="section level2">
+<h2>Synopsis</h2>
+<p>In this analysis I amd concerned with two primary points. Which event types have the greatest health impact and the greatest economic impact. I begin my work with data processing to create usable objects for results visualization. I finish my analysis with two plots and a final table.</p>
+</div>
+<div id="package-load" class="section level2">
+<h2>Package Load</h2>
+<p>Load packages required for analysis.</p>
+<pre class="r"><code>require(tidyverse)
+require(lubridate)
+require(kableExtra)</code></pre>
+</div>
+<div id="data-import" class="section level2">
+<h2>Data Import</h2>
+<p>Leveraging <code>read_csv</code> from the <code>readr</code> packackge included with <code>tidyverse</code> to import the dataset.</p>
+<pre class="r"><code>weather_dat = read_csv(&quot;data/repdata%2Fdata%2FStormData.csv.bz2&quot;)</code></pre>
+</div>
+<div id="data-processing" class="section level2">
+<h2>Data Processing</h2>
+<p>The first thing I want to do is convert <code>BGN_DATE</code> to a usable longitudinal variable. I am doing this so I can provide change-over-time information as I attempt to answer both questions presented. I am storing the result as a new object so I don’t mess with my original data import object.</p>
+<pre class="r"><code>new_dat = weather_dat %&gt;%
+  mutate(BGN_DATE = str_trim(str_extract(BGN_DATE, &quot;^\\S+\\s+&quot;))) %&gt;%
+  mutate(BGN_DATE = as.POSIXct(BGN_DATE, format = &quot;%m/%d/%Y&quot;))</code></pre>
+<p>I also want to select the most recent ten years of data. Even though there are data points from 1950-01-03 to 2011-11-30, there are a lot of gaps in data collection the farther back you go.</p>
+<pre class="r"><code>new_dat = new_dat %&gt;%
+  filter(year(BGN_DATE) &gt;= (year(max(BGN_DATE)) - 10))</code></pre>
+<div id="question-1-processing" class="section level3">
+<h3>Question 1 Processing</h3>
+<p>I want to attempt to provide my version of an answer to question 1 in three steps. This section will deal with data processing and later I will work through visual creation. The first thing I am doing is creating a fatalities object representative of the top 10 fatality causing event types.</p>
+<pre class="r"><code>quest_1_fat = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(fatalities_count = sum(FATALITIES)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, fatalities_count)</code></pre>
+<p>The next step is to create an injuries object representative of the top 10 injury causing event types. You will notice this step is just a simple modification of the first.</p>
+<pre class="r"><code>quest_1_inj = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(injury_count = sum(INJURIES)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, injury_count)</code></pre>
+<p>The third and final step starts by filtering for event types that are common between <code>quest_1_fat</code> and <code>quest_1_inj</code>, then consolidates data points by month, sums up injuries and fatalities by event type, and then finally gathers injuries and fatalities into one variable.</p>
+<pre class="r"><code>quest_1_final = new_dat %&gt;%
+  filter(EVTYPE %in% quest_1_fat$EVTYPE &amp; EVTYPE %in% quest_1_inj$EVTYPE) %&gt;%
+  mutate(BGN_DATE = floor_date(BGN_DATE, unit = &quot;1 month&quot;)) %&gt;%
+  group_by(BGN_DATE, EVTYPE) %&gt;%
+  summarise_at(c(&quot;INJURIES&quot;, &quot;FATALITIES&quot;), sum) %&gt;%
+  ungroup() %&gt;%
+  gather(&quot;measure&quot;, &quot;count&quot;, 3:4)</code></pre>
+</div>
+<div id="question-2-processing" class="section level3">
+<h3>Question 2 Processing</h3>
+<p>To begin question two, I am writing a function to help me convert the character values for thousand, million, and billion to their numeric value as a multiplier for the <code>PROPDMG</code> and <code>CROPDMG</code> variables.</p>
+<pre class="r"><code>f = function(dat) {
+  if(dat == &quot;K&quot;) {
+    1000
+  } else if (dat == &quot;M&quot;) {
+    1000000
+  } else if (dat == &quot;B&quot;) {
+    1000000000
+  } else {
+    NA
+  }
+}</code></pre>
+<p>Next, I filter out <code>NA</code> values for property and crop damage, create two new variables that replace the character values with integer multipliers, and then calculate actual property and crop damage values.</p>
+<pre class="r"><code>new_dat = new_dat %&gt;%
+  filter(is.na(PROPDMGEXP) == FALSE) %&gt;%
+  filter(is.na(CROPDMGEXP) == FALSE) %&gt;%
+  mutate(prop_mult = as.integer(map_chr(.x = PROPDMGEXP, .f = f))) %&gt;%
+  mutate(crop_mult = as.integer(map_chr(.x = CROPDMGEXP, .f = f))) %&gt;%
+  mutate(prop_dmg = PROPDMG * prop_mult) %&gt;%
+  mutate(crop_dmg = CROPDMG * crop_mult)</code></pre>
+<p>Very similar to question one, I am now going to look at the top ten event types by total property damage over the last ten years.</p>
+<pre class="r"><code>quest_2_prop = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(total_dmg = sum(prop_dmg)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, total_dmg)</code></pre>
+<p>Here again, I am creating an object that has the top ten event types by total crop damage over the last ten years.</p>
+<pre class="r"><code>quest_2_crop = new_dat %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise(total_dmg = sum(crop_dmg)) %&gt;%
+  ungroup() %&gt;%
+  top_n(10, total_dmg)</code></pre>
+<p>As a final step, I am creating an object that filters for only event types that occur in both top ten lists and then calculates total property and crop damage over time.</p>
+<pre class="r"><code>quest_2_final = new_dat %&gt;%
+filter(EVTYPE %in% quest_2_prop$EVTYPE &amp; EVTYPE %in% quest_2_crop$EVTYPE) %&gt;%
+  mutate(BGN_DATE = floor_date(BGN_DATE, unit = &quot;1 month&quot;)) %&gt;%
+  group_by(BGN_DATE, EVTYPE) %&gt;%
+  summarise_at(c(&quot;prop_dmg&quot;, &quot;crop_dmg&quot;), sum) %&gt;%
+  ungroup() %&gt;%
+  gather(&quot;measure&quot;, &quot;total_dmg&quot;, 3:4)</code></pre>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<div id="question-1-results" class="section level3">
+<h3>Question 1 Results</h3>
+<p>The goal of this plot is to show the most impactful event types over the past ten years. For this, I am using a faceted <code>ggplot</code> column visualization.</p>
+<pre class="r"><code>quest_1_final %&gt;%
+  ggplot(aes(as.character(year(BGN_DATE)), count, fill = measure)) +
+  geom_col() +
+  facet_wrap(~EVTYPE, scales = &quot;free_y&quot;) +
+  theme(text = element_text(family = &quot;Roboto&quot;),
+        legend.position = &quot;bottom&quot;,
+        axis.text.x = element_text(angle = 90, vjust = 0.5),
+        axis.title = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_rect(fill = &quot;#146a90&quot;),
+        strip.text = element_text(color = &quot;white&quot;, face = &quot;bold&quot;)) +
+  scale_fill_viridis_d(&quot;&quot;, direction = -1)</code></pre>
+<p><img src="/post/2018-09-02-reproducible-research_files/figure-html/unnamed-chunk-13-1.png" width="100%" /></p>
+</div>
+<div id="question-2-results" class="section level3">
+<h3>Question 2 Results</h3>
+<p>As with question one, the goal of this plot is to show the most impactful event types over the past ten years in terms of property and crop damage. For this, I am using a faceted <code>ggplot</code> column visualization that is modeled after the question one plot for consistency.</p>
+<pre class="r"><code>quest_2_final %&gt;%
+  ggplot(aes(as.character(year(BGN_DATE)), total_dmg/1000000, fill = measure)) +
+  geom_col() +
+  facet_wrap(~EVTYPE, scales = &quot;free_y&quot;) +
+  theme(text = element_text(family = &quot;Roboto&quot;),
+        legend.position = &quot;bottom&quot;,
+        axis.text.x = element_text(angle = 90, vjust = 0.5),
+        axis.title.x = element_blank(),
+        panel.background = element_blank(),
+        strip.background = element_rect(fill = &quot;#146a90&quot;),
+        strip.text = element_text(color = &quot;white&quot;, face = &quot;bold&quot;)) +
+  labs(y = &quot;Total Damage (millions)&quot;) +
+  scale_fill_viridis_d(&quot;&quot;, direction = -1, labels = c(&quot;Crop Damage&quot;, &quot;Property Damage&quot;)) +
+  scale_y_continuous(labels = scales::dollar_format())</code></pre>
+<p><img src="/post/2018-09-02-reproducible-research_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
+</div>
+<div id="overall" class="section level3">
+<h3>Overall</h3>
+<p>What about the worst in terms of economic impact and health? If you look at both question one and two results you will find only one event type consistent between both.</p>
+<pre class="r"><code>new_dat %&gt;%
+  filter(EVTYPE %in% quest_1_fat$EVTYPE &amp;
+           EVTYPE %in% quest_1_inj$EVTYPE &amp;
+           EVTYPE %in% quest_2_prop$EVTYPE &amp;
+           EVTYPE %in% quest_2_crop$EVTYPE) %&gt;%
+  group_by(EVTYPE) %&gt;%
+  summarise_at(c(&quot;INJURIES&quot;, &quot;FATALITIES&quot;, &quot;CROPDMG&quot;, &quot;PROPDMG&quot;), sum) %&gt;%
+  kable(format = &quot;html&quot;,
+        align = &quot;lcccc&quot;,
+        col.names = c(&quot;Event Type&quot;, &quot;Injuries&quot;, &quot;Fatalities&quot;, &quot;Crop Damage&quot;, &quot;Property Damage&quot;),
+        format.args = list(big.mark = &quot;,&quot;)) %&gt;%
+  kable_styling(full_width = TRUE)</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Event Type
+</th>
+<th style="text-align:center;">
+Injuries
+</th>
+<th style="text-align:center;">
+Fatalities
+</th>
+<th style="text-align:center;">
+Crop Damage
+</th>
+<th style="text-align:center;">
+Property Damage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+THUNDERSTORM WIND
+</td>
+<td style="text-align:center;">
+1,400
+</td>
+<td style="text-align:center;">
+130
+</td>
+<td style="text-align:center;">
+66,663
+</td>
+<td style="text-align:center;">
+862,257.4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>

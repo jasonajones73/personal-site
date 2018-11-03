@@ -28,10 +28,10 @@ weight = 7
   description = "80%"
   
 [[feature]]
-  icon = "users"
-  icon_pack = "fas"
-  name = "Leadership Development"
-  description = "80%"  
+  icon = "python"
+  icon_pack = "fab"
+  name = "Python"
+  description = "20%"
   
 [[feature]]
   icon = "cogs"

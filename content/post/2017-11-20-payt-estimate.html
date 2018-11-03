@@ -1,0 +1,327 @@
+---
+title: 'Estimating Pay-As-You-Throw (PAYT) Cost Recovery Rate'
+author: "Jason Jones"
+date: 2017-11-20T21:09:00-00:00
+categories: ["R"]
+tags: ["R Markdown", "garbage", "budget", "analysis"]
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>As a different approach to this exercise, I would like to avoid traditional Microsoft Excel analysis and deliver my product in a fully reproducible <a href="http://rmarkdown.rstudio.com/">R Markdown</a> format. I will attempt to walk you through my thought process in a simple fashion, including all code chunks and formulas. If this analysis is consistent with a best practice approach, it can be made available to others for reproduction. The transparency and reproducibility of R Markdown allows for others to easily understand, critique and augment the analysis.</p>
+<p>The research question posed is:</p>
+<blockquote>
+<p><em>Using the information given and the accompanying Excel file, determine how much the city would have to charge per bag to cover <strong>garbage</strong> collection and disposal costs.</em></p>
+</blockquote>
+<p>To answer this question I will evaluate The City of Raleigh’s current state against the desired state.</p>
+<ul>
+<li><strong>Current State:</strong> customers pay a monthly fee for garbage and recycling collection regardless of how much total waste they produce</li>
+<li><strong>Desired State:</strong> customers purchase special garbage bags from the city and only pay for the waste that they produce</li>
+</ul>
+<p>I have broken this evaluation down into four steps to hopefully provide additional clarity.</p>
+<ol style="list-style-type: decimal">
+<li>Forecast Collection Breakdown</li>
+<li>Estimate Net Costs</li>
+<li>Calculate Recovery Estimate</li>
+<li>Determine PAYT Rate Estimate</li>
+</ol>
+<p>Breaking down the analysis in this manner not only provides additional clarity but allows co-workers and supervisors to find any errors more quickly than searching through formulas in a spreadsheet. Fortunately, that will allow you to more easily locate the inevitable errors contained within this analysis.</p>
+</div>
+<div id="step-1-forecast-collection-breakdown" class="section level2">
+<h2>Step 1: Forecast Collection Breakdown</h2>
+<div id="calculate-new-diversion-rate" class="section level3">
+<h3>1.1 Calculate New Diversion Rate</h3>
+<pre class="r"><code>total.garbage.tons = 84582
+total.recycling.tons = 25189
+
+current.diversion.rate = total.recycling.tons/(total.garbage.tons + 
+    total.recycling.tons)
+
+new.diversion.rate = round(current.diversion.rate * 1.3, digits = 2)</code></pre>
+<p>Here, I have to start with the current diversion rate and add the projected increase. To calculate the current diversion rate, I am dividing the total recycling tons by the total tons collected between garbage and recycling. Finally, I add the 30% projected increase. With the above calculation, I estimate a new diversion rate of <strong>30</strong>%.</p>
+</div>
+<div id="calculate-new-garbagerecycling-split" class="section level3">
+<h3>1.2 Calculate New Garbage/Recycling Split</h3>
+<pre class="r"><code>total.tons = total.garbage.tons + total.recycling.tons
+
+new.total.recycling.tons = round(total.tons * new.diversion.rate)
+new.total.garbage.tons = round(total.tons - new.total.recycling.tons)</code></pre>
+<p>I can now use my new diversion rate estimate to calculate an updated split between garbage and recycling. To do this, I multiply the old total by the diversion rate to arrive at a total for recycling. From there, I can subtract recycling from the total to arrive a projection for tons of garbage. I estimate that the new total tons of garbage will be <strong>76,840</strong> and the new total tons of recycling will be <strong>32,931</strong>.</p>
+</div>
+</div>
+<div id="step-2-estimate-net-costs" class="section level2">
+<h2>Step 2: Estimate Net Costs</h2>
+<div id="calculate-total-cost-to-department" class="section level3">
+<h3>2.1 Calculate Total Cost to Department</h3>
+<pre class="r"><code>tipping.fees = 3686202
+garbage.cost.per.ton = 273
+recycling.cost.per.ton = 37
+recycling.profit.per.ton = 30
+recycling.fee = 2.6
+households.served = 120500
+
+recycling.fee.revenue = (recycling.fee * households.served) * 
+    12
+
+recycling.profit = recycling.profit.per.ton * new.total.recycling.tons
+
+garbage.collection.expense = garbage.cost.per.ton * new.total.garbage.tons + 
+    tipping.fees
+
+recycling.collection.expense = (recycling.cost.per.ton * new.total.recycling.tons) - 
+    (recycling.profit + recycling.fee.revenue)
+
+total.cost = garbage.collection.expense + recycling.collection.expense</code></pre>
+<p>The above calculation renders two very important figures. I estimate a new garbage collection and disposal expense of <strong>$24,663,522</strong>. Combined with the new net recycling collection expense, this results in a total collection and disposal net cost estimate of <strong>$21,134,439</strong>.</p>
+</div>
+</div>
+<div id="step-3-calculate-recovery-estimate" class="section level2">
+<h2>Step 3: Calculate Recovery Estimate</h2>
+<div id="calculate-current-fee-revenue" class="section level3">
+<h3>3.1 Calculate Current Fee Revenue</h3>
+<pre class="r"><code>garbage.fee = 12.2
+
+total.current.fee.revenue = ((garbage.fee + recycling.fee) * 
+    households.served) * 12</code></pre>
+<p>Using the information provided in the word document, I use the above formula to calculate total current fee revenue. The above formula yields a total current fee revenue of <strong>$21,400,800</strong></p>
+</div>
+<div id="calculate-average-total-expense" class="section level3">
+<h3>3.2 Calculate Average Total Expense</h3>
+<pre class="r"><code>average.total.expense &lt;- division.expense %&gt;% group_by(`Fiscal Year`) %&gt;% 
+    summarise(total = sum(Expense)) %&gt;% ungroup() %&gt;% summarise(average = mean(total))
+
+average.total.expense = round(average.total.expense$average)</code></pre>
+<p>Here, I use the data from the spreadsheet that I have pulled in to calculate an average total division expense. To do this I group the data by fiscal year, calculate a sum for each fiscal year and then calculate an average. My average total expense estimate comes out to <strong>$30,932,157</strong></p>
+</div>
+<div id="calculate-current-recovery-rate" class="section level3">
+<h3>3.3 Calculate Current Recovery Rate</h3>
+<pre class="r"><code>old.recycling.profit = recycling.profit.per.ton * total.recycling.tons
+
+current.recovery.rate = +
+  (total.current.fee.revenue + old.recycling.profit) / average.total.expense </code></pre>
+<p>Now I am able to use my prior two calculations to estimate the current recovery rate. You may also notice an additional step above to create an estimate of current recycling profit before any changes occur. To calculate the recovery rate, I divide the total current fee revenue and the recycling revenue that I just calculated by the average total expense that I calculated in the last step. This formula yields a current recovery rate of <strong>71.63%</strong>.</p>
+</div>
+<div id="project-new-total-expense" class="section level3">
+<h3>3.4 Project New Total Expense</h3>
+<pre class="r"><code>admin.yardwaste.average.total = division.expense %&gt;% filter(Division != 
+    &quot;Recycling&quot;) %&gt;% filter(Division != &quot;Residential Collection&quot;) %&gt;% 
+    group_by(`Fiscal Year`) %&gt;% summarise(total = sum(Expense)) %&gt;% 
+    ungroup() %&gt;% summarise(average = mean(total))
+
+new.total.expense.projection = round(admin.yardwaste.average.total$average) + 
+    garbage.collection.expense + recycling.collection.expense</code></pre>
+<p>To project the new total expense, I am pulling data from several prior steps. First, I use the spreadsheet data that I pulled in to isolate costs associated with division administration and yardwaste collection. I perform the same function on this data, once isolated, as I did in 3.2. Once this is calculated I add this estimate to my newly calculated garbage and recycling expense for a new total expense projection of <strong>$30,972,068</strong>.</p>
+</div>
+<div id="calculate-total-expense-to-recover" class="section level3">
+<h3>3.5 Calculate Total Expense To Recover</h3>
+<pre class="r"><code>new.expense.to.recover = round(new.total.expense.projection * 
+    current.recovery.rate)</code></pre>
+<p>Finally, I am able to use the new total expense estimate and recovery rate to come up with an updated estimate of total expenses to recover. The above formula yields an estimate of <strong>$22,185,058</strong>.</p>
+</div>
+</div>
+<div id="step-4-determine-payt-rate-estimate" class="section level2">
+<h2>Step 4: Determine PAYT Rate Estimate</h2>
+<div id="calculate-bags-per-year" class="section level3">
+<h3>4.1 Calculate Bags Per Year</h3>
+<pre class="r"><code>bag.capacity.pounds = 20
+
+total.pounds = new.total.garbage.tons * 2000
+
+bags.per.year = total.pounds/bag.capacity.pounds</code></pre>
+<p>The first step in determining the PAYT rate estimate is calculating how many garbage bags we expect to sell for the year. To do this, I need to convert my new tons of garbage estimate from 1.2 to pounds of garbage by multiplying it by 2,000 (pounds per ton). After that is done, I can estimate how many garbage bags we will sell by dividing the total garbage pounds by the estimated bag capacity. This yields an estimate of <strong>7,684,000 bags</strong>.</p>
+</div>
+<div id="calculate-cost-per-bag-wo-recovery" class="section level3">
+<h3>4.2 Calculate Cost Per Bag (w/o Recovery)</h3>
+<pre class="r"><code>cost.per.bag = round(garbage.collection.expense/bags.per.year, 
+    digits = 2)</code></pre>
+<p>Finally, I am able to deliver my first estimate for cost per bag. This estimate assumes that we only want to “cover <strong>garbage</strong> collection and disposal costs” as stated in the exercise prompt. I divide my updated estimate of total garbage collection and disposal expense by my estimate of bags for the year to come up with a per bag estimate of <strong>$3.21</strong>.</p>
+<p>You will see below, that this option achieves the target recovery rate of 80% outlined in the budget document.</p>
+</div>
+<div id="calculate-cost-per-bag-w-recovery-consideration" class="section level3">
+<h3>4.3 Calculate Cost Per Bag (w/ Recovery Consideration)</h3>
+<pre class="r"><code>recovery.cost.per.bag = round(new.expense.to.recover/bags.per.year, 
+    digits = 2)
+
+target.recovery.rate = 0.8
+
+target.expense.to.recover = round(new.total.expense.projection * 
+    target.recovery.rate)
+
+target.recovery.cost.per.bag = round(target.expense.to.recover/bags.per.year, 
+    digits = 2)</code></pre>
+<p>For a possibly more realistic projection, I am incorporating my updated estimate of total expenses to recover. Since this was noted in the budget document, I am assuming that this will be the primary calculation considered. I am also providing a per bag estimate for the 80% cost recovery target mentioned in the budget document.</p>
+<p>My per bag estimate, with a current cost recovery estimate of <strong>71.63%</strong>, comes out to <strong>$2.89 per bag</strong>.</p>
+<p>My per bag estimate, with a target cost recovery estimate of <strong>80%</strong>, comes out to <strong>$3.22 per bag</strong>.</p>
+<p><em>Please note that in both estimates I am subtracting my estimated recycling fee revenue and recycling profit.</em></p>
+</div>
+</div>
+<div id="additional-consideration" class="section level2">
+<h2>Additional Consideration</h2>
+<div id="subsidizing-yardwaste-collection" class="section level3">
+<h3>Subsidizing Yardwaste Collection</h3>
+<p>Another consideration that may be applicable is the obvious subsidy to yardwaste collection. Administrative costs are a given, but yardwaste appears to be the only direct service provided with no costs recovered. Below, I will take a quick look at the difference in pricing if a fee to cover the cost of yardwaste collection is also considered.</p>
+</div>
+<div id="isolate-average-yardwaste-collection-expense" class="section level3">
+<h3>Isolate Average Yardwaste Collection Expense</h3>
+<pre class="r"><code>isolate.yardwaste.cost = division.expense %&gt;% filter(Division == 
+    &quot;Yardwaste Center&quot;) %&gt;% group_by(`Fiscal Year`) %&gt;% summarise(total = sum(Expense)) %&gt;% 
+    ungroup() %&gt;% summarise(average = mean(total))
+
+isolate.yardwaste.cost = isolate.yardwaste.cost$average</code></pre>
+</div>
+<div id="calculate-cost-per-bag-without-yardwaste-subsidy" class="section level3">
+<h3>Calculate Cost Per Bag Without Yardwaste Subsidy</h3>
+<pre class="r"><code>recovery.cost.per.bag.no.yw = round((new.expense.to.recover - 
+    isolate.yardwaste.cost)/bags.per.year, digits = 2)
+
+target.expense.to.recover.no.yw = round((new.total.expense.projection - 
+    isolate.yardwaste.cost) * target.recovery.rate)
+
+target.recovery.cost.per.bag.no.yw = round(target.expense.to.recover.no.yw/bags.per.year, 
+    digits = 2)</code></pre>
+<p>With no yardwaste collection fees included, my per bag estimate, with a current cost recovery estimate of <strong>71.63%</strong>, comes out to <strong>$2.63 per bag</strong>.</p>
+<p>Additionally, my per bag estimate, with a target cost recovery estimate of <strong>80%</strong>, comes out to <strong>$3.02 per bag</strong>.</p>
+</div>
+</div>
+<div id="visualize-collection-differential" class="section level2">
+<h2>Visualize Collection Differential</h2>
+<pre class="r"><code>df = data.frame(Type = c(&quot;Garbage&quot;, &quot;Recycling&quot;), Current = c(total.garbage.tons, 
+    total.recycling.tons), PAYT = c(new.total.garbage.tons, new.total.recycling.tons))
+
+df = df %&gt;% gather(&quot;Estimates&quot;, &quot;Tons&quot;, 2:3)
+
+df %&gt;% ggplot(aes(Type, Tons, fill = Type)) + geom_col(position = &quot;dodge&quot;) + 
+    facet_wrap(~Estimates) + ggtitle(&quot;Tonnage Comparison: Current vs PAYT&quot;) + 
+    theme_minimal() + scale_y_continuous(labels = scales::comma)</code></pre>
+<p><img src="/post/2017-11-20-payt-estimate_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<div id="supplement-attached-data" class="section level2">
+<h2>Supplement: Attached Data</h2>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Division</th>
+<th align="right">Expense</th>
+<th align="right">Fiscal Year</th>
+<th align="left">X4</th>
+<th align="left">X5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Administration</td>
+<td align="right">3344632</td>
+<td align="right">2012</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Administration</td>
+<td align="right">9926363</td>
+<td align="right">2013</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Administration</td>
+<td align="right">8703620</td>
+<td align="right">2014</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Administration</td>
+<td align="right">9603260</td>
+<td align="right">2015</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Recycling</td>
+<td align="right">4430951</td>
+<td align="right">2012</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Recycling</td>
+<td align="right">4467306</td>
+<td align="right">2013</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Recycling</td>
+<td align="right">5085779</td>
+<td align="right">2014</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Recycling</td>
+<td align="right">5234118</td>
+<td align="right">2015</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Residential Collection</td>
+<td align="right">15344575</td>
+<td align="right">2012</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Residential Collection</td>
+<td align="right">15437538</td>
+<td align="right">2013</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Residential Collection</td>
+<td align="right">16316297</td>
+<td align="right">2014</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Residential Collection</td>
+<td align="right">18061548</td>
+<td align="right">2015</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Yardwaste Center</td>
+<td align="right">1435974</td>
+<td align="right">2012</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Yardwaste Center</td>
+<td align="right">1466780</td>
+<td align="right">2013</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Yardwaste Center</td>
+<td align="right">2470295</td>
+<td align="right">2014</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Yardwaste Center</td>
+<td align="right">2399591</td>
+<td align="right">2015</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>

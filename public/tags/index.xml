@@ -7,19 +7,10 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Wed, 20 Apr 2016 00:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 27 Apr 2016 00:00:00 -0400</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Academic</title>
-      <link>/tags/academic/</link>
-      <pubDate>Wed, 20 Apr 2016 00:00:00 -0400</pubDate>
-      
-      <guid>/tags/academic/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>Deep Learning</title>
@@ -51,27 +42,54 @@
     <item>
       <title>R Markdown</title>
       <link>/tags/r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <pubDate>Sun, 02 Sep 2018 21:09:00 +0000</pubDate>
       
       <guid>/tags/r-markdown/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>plot</title>
-      <link>/tags/plot/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>analysis</title>
+      <link>/tags/analysis/</link>
+      <pubDate>Sun, 02 Sep 2018 21:09:00 +0000</pubDate>
       
-      <guid>/tags/plot/</guid>
+      <guid>/tags/analysis/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>regression</title>
-      <link>/tags/regression/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>budget</title>
+      <link>/tags/budget/</link>
+      <pubDate>Sun, 29 Apr 2018 21:09:00 +0000</pubDate>
       
-      <guid>/tags/regression/</guid>
+      <guid>/tags/budget/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>garbage</title>
+      <link>/tags/garbage/</link>
+      <pubDate>Mon, 20 Nov 2017 21:09:00 +0000</pubDate>
+      
+      <guid>/tags/garbage/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>reproducible</title>
+      <link>/tags/reproducible/</link>
+      <pubDate>Sun, 02 Sep 2018 21:09:00 +0000</pubDate>
+      
+      <guid>/tags/reproducible/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sentiment</title>
+      <link>/tags/sentiment/</link>
+      <pubDate>Sun, 29 Apr 2018 21:09:00 +0000</pubDate>
+      
+      <guid>/tags/sentiment/</guid>
       <description></description>
     </item>
     
