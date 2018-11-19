@@ -53,14 +53,5 @@ library(tidyverse) library(pdftools) library(tidytext) library(knitr) library(ka
 download.file(&amp;quot;https://www.raleighnc.gov/content/BudgetManagement/Documents/Budget/Archive/2018/FY2018AdoptedBudget20160612.pdf&amp;quot;, &amp;quot;FY2018AdoptedBudget.pdf&amp;quot;, mode = &amp;quot;wb&amp;quot;) txt = pdf_text(&amp;quot;FY2018AdoptedBudget.pdf&amp;quot;) unlink(&amp;quot;FY2018AdoptedBudget.pdf&amp;quot;)  Create Data Frame Create a page number character vector, create a data frame by binding the page number character vector with the extracted text, and finally “unnest” all of the page text into individual words.</description>
     </item>
     
-    <item>
-      <title>Estimating Pay-As-You-Throw (PAYT) Cost Recovery Rate</title>
-      <link>/post/2017-11-20-payt-estimate/</link>
-      <pubDate>Mon, 20 Nov 2017 21:09:00 +0000</pubDate>
-      
-      <guid>/post/2017-11-20-payt-estimate/</guid>
-      <description>Introduction As a different approach to this exercise, I would like to avoid traditional Microsoft Excel analysis and deliver my product in a fully reproducible R Markdown format. I will attempt to walk you through my thought process in a simple fashion, including all code chunks and formulas. If this analysis is consistent with a best practice approach, it can be made available to others for reproduction. The transparency and reproducibility of R Markdown allows for others to easily understand, critique and augment the analysis.</description>
-    </item>
-    
   </channel>
 </rss>
