@@ -15,10 +15,10 @@
   
     
   
-  <meta name="description" content="Analytics &amp; Innovation Manager">
+  <meta name="description" content="library(tidyverse) library(lubridate) bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;, col_types = cols(offensereportingofficerbadge2 = col_character(), offensebeat = col_character())) %&gt;% mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;)) bulk_dat &lt;- bulk_dat %&gt;% mutate(hour = hour(offensetimeofoccurence2)) %&gt;% mutate(age = as.integer(offenseage)) %&gt;% mutate(month = month(offensedate)) bulk_dat %&gt;% ggplot(aes(age)) &#43; geom_histogram(aes(y = ..density..), binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) &#43; geom_density(alpha = .2, fill = &quot;blue&quot;) &#43; geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1) bulk_dat %&gt;% ggplot(aes(hour)) &#43; geom_histogram(aes(y = .">
 
   
-  <link rel="alternate" hreflang="en-us" href="">
+  <link rel="alternate" hreflang="en-us" href="/post/2018-11-12-crime-age-stats/">
 
   
 
@@ -86,7 +86,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="">
+  <link rel="canonical" href="/post/2018-11-12-crime-age-stats/">
 
   <meta property="twitter:card" content="summary_large_image">
   
@@ -94,23 +94,25 @@
   <meta property="twitter:creator" content="@packpridejones">
   
   <meta property="og:site_name" content="JASON JONES">
-  <meta property="og:url" content="">
-  <meta property="og:title" content="404 Page not found | JASON JONES">
-  <meta property="og:description" content="Analytics &amp; Innovation Manager">
+  <meta property="og:url" content="/post/2018-11-12-crime-age-stats/">
+  <meta property="og:title" content="Age Is Just A Number…Statistically Speaking | JASON JONES">
+  <meta property="og:description" content="library(tidyverse) library(lubridate) bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;, col_types = cols(offensereportingofficerbadge2 = col_character(), offensebeat = col_character())) %&gt;% mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;)) bulk_dat &lt;- bulk_dat %&gt;% mutate(hour = hour(offensetimeofoccurence2)) %&gt;% mutate(age = as.integer(offenseage)) %&gt;% mutate(month = month(offensedate)) bulk_dat %&gt;% ggplot(aes(age)) &#43; geom_histogram(aes(y = ..density..), binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) &#43; geom_density(alpha = .2, fill = &quot;blue&quot;) &#43; geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1) bulk_dat %&gt;% ggplot(aes(hour)) &#43; geom_histogram(aes(y = .">
   
   
     
   <meta property="og:image" content="/img/icon-192.png">
   <meta property="og:locale" content="en-us">
   
+  <meta property="article:published_time" content="2018-11-12T21:09:00&#43;00:00">
   
+  <meta property="article:modified_time" content="2018-11-12T21:09:00&#43;00:00">
+  
+
   
 
   
 
-  
-
-  <title>404 Page not found | JASON JONES</title>
+  <title>Age Is Just A Number…Statistically Speaking | JASON JONES</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
@@ -222,72 +224,263 @@
   </div>
 </nav>
 
-<div class="container">
 
-  <h1>Page not found</h1>
-  <p>Perhaps you were looking for one of these?</p>
+<article class="article" itemscope itemtype="http://schema.org/Article">
 
   
-  
-  <h2>Posts</h2>
-  
-  <ul>
-    <li><a href="/post/2018-11-17-raleigh-police/">Spatial Exploration - MUSA Masterclass</a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/post/2018-11-12-crime-age-stats/">Age Is Just A Number…Statistically Speaking</a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/post/2018-09-02-reproducible-research/">Health and Economic Impact of Storms and Severe Weather Events</a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/post/2018-04-29-raleigh-sentiment/">City of Raleigh Budget Sentiment Analysis</a></li>
-  </ul>
-  
-  <ul>
-    <li><a href="/post/2017-11-20-payt-estimate/">Estimating Pay-As-You-Throw (PAYT) Cost Recovery Rate</a></li>
-  </ul>
-  
+
+
+
+
+
+
+
+
+
+
+
+
   
 
   
   
-  <h2>Publications</h2>
   
-  <ul>
-    <li><a href="/publication/i-have-to-ask-you/">I Have to Ask You</a></li>
-  </ul>
+<div class="article-container pt-3">
+  <h1 itemprop="name">Age Is Just A Number…Statistically Speaking</h1>
+
   
+
+  
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Jones">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2018-11-12 21:09:00 &#43;0000 &#43;0000" itemprop="datePublished">
+    <time datetime="2018-11-12 21:09:00 &#43;0000 &#43;0000" itemprop="dateModified">
+      Nov 12, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Jones">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 min read
+  </span>
   
 
   
   
-  <h2>Talks</h2>
-  
-  <ul>
-    <li><a href="/talk/open-data/">Government Open Data</a></li>
-  </ul>
-  
+
   
 
   
   
-  <h2>Projects</h2>
-  
-  <ul>
-    <li><a href="/project/external-project/">External Project</a></li>
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Age%20Is%20Just%20A%20Number%e2%80%a6Statistically%20Speaking&amp;url=%2fpost%2f2018-11-12-crime-age-stats%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2f2018-11-12-crime-age-stats%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2f2018-11-12-crime-age-stats%2f&amp;title=Age%20Is%20Just%20A%20Number%e2%80%a6Statistically%20Speaking"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2f2018-11-12-crime-age-stats%2f&amp;title=Age%20Is%20Just%20A%20Number%e2%80%a6Statistically%20Speaking"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Age%20Is%20Just%20A%20Number%e2%80%a6Statistically%20Speaking&amp;body=%2fpost%2f2018-11-12-crime-age-stats%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
   </ul>
-  
-  <ul>
-    <li><a href="/project/internal-project/">Internal Project</a></li>
-  </ul>
-  
+</div>
+
+
   
 
 </div>
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<pre class="r"><code>library(tidyverse)
+library(lubridate)</code></pre>
+<pre class="r"><code>bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;,
+                     col_types = cols(offensereportingofficerbadge2 = col_character(),
+                                      offensebeat = col_character())) %&gt;%
+  mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;))</code></pre>
+<pre class="r"><code>bulk_dat &lt;- bulk_dat %&gt;%
+  mutate(hour = hour(offensetimeofoccurence2)) %&gt;%
+  mutate(age = as.integer(offenseage)) %&gt;%
+  mutate(month = month(offensedate))</code></pre>
+<pre class="r"><code>bulk_dat %&gt;%
+  ggplot(aes(age)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) +
+  geom_density(alpha = .2, fill = &quot;blue&quot;) +
+  geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="/post/2018-11-12-crime-age-stats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>bulk_dat %&gt;%
+  ggplot(aes(hour)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 2, color = &quot;black&quot;, fill = &quot;white&quot;) +
+  geom_density(alpha = .2, fill = &quot;blue&quot;) +
+  geom_vline(aes(xintercept = mean(hour, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="/post/2018-11-12-crime-age-stats_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>bulk_dat %&gt;%
+  ggplot(aes(month)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 1, color = &quot;black&quot;, fill = &quot;white&quot;) +
+  geom_density(alpha = .2, fill = &quot;blue&quot;) +
+  geom_vline(aes(xintercept = mean(month, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="/post/2018-11-12-crime-age-stats_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+
+    </div>
+
+    
+
+    
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  <img class="portrait mr-3" src="https://s.gravatar.com/avatar/d770b45a3dbfa7425fda39682eb20681?s=200')" itemprop="image" alt="Avatar">
+  
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/">Jason Jones</a></h5>
+    <h6 class="card-subtitle">Analytics &amp; Innovation Manager</h6>
+    
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="/#contact" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://twitter.com/packpridejones" target="_blank" rel="noopener">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.linkedin.com/in/jason-jones-b32aab5a" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/jasonajones73" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+
+    
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
 <div class="container">
   <footer class="site-footer">
   

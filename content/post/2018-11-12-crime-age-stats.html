@@ -1,0 +1,40 @@
+---
+title: "Age Is Just A Number…Statistically Speaking"
+author: "Jason Jones"
+date: 2018-11-12T21:09:00-00:00
+output: html_document
+---
+
+
+
+<pre class="r"><code>library(tidyverse)
+library(lubridate)</code></pre>
+<pre class="r"><code>bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;,
+                     col_types = cols(offensereportingofficerbadge2 = col_character(),
+                                      offensebeat = col_character())) %&gt;%
+  mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;))</code></pre>
+<pre class="r"><code>bulk_dat &lt;- bulk_dat %&gt;%
+  mutate(hour = hour(offensetimeofoccurence2)) %&gt;%
+  mutate(age = as.integer(offenseage)) %&gt;%
+  mutate(month = month(offensedate))</code></pre>
+<pre class="r"><code>bulk_dat %&gt;%
+  ggplot(aes(age)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) +
+  geom_density(alpha = .2, fill = &quot;blue&quot;) +
+  geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="/post/2018-11-12-crime-age-stats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>bulk_dat %&gt;%
+  ggplot(aes(hour)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 2, color = &quot;black&quot;, fill = &quot;white&quot;) +
+  geom_density(alpha = .2, fill = &quot;blue&quot;) +
+  geom_vline(aes(xintercept = mean(hour, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="/post/2018-11-12-crime-age-stats_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>bulk_dat %&gt;%
+  ggplot(aes(month)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 1, color = &quot;black&quot;, fill = &quot;white&quot;) +
+  geom_density(alpha = .2, fill = &quot;blue&quot;) +
+  geom_vline(aes(xintercept = mean(month, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="/post/2018-11-12-crime-age-stats_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>

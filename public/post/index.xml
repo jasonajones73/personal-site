@@ -13,6 +13,25 @@
     
     
     <item>
+      <title>Spatial Exploration - MUSA Masterclass</title>
+      <link>/post/2018-11-17-raleigh-police/</link>
+      <pubDate>Sun, 18 Nov 2018 21:09:00 +0000</pubDate>
+      
+      <guid>/post/2018-11-17-raleigh-police/</guid>
+      <description>This post was inspired by the MUSA Masterclass provided very graciously by Ken Steif and James Cheshire. If you aren’t familiar with the program I would strongly encourage you to check it out - UPenn MUSA Program.
+I decided to use open data from the City of Raleigh for my exploration. All data can be found on The City of Raleigh’s open data portal. The primary data I am using is contained in the Raleigh Police Incidents (NIBRS) dataset.</description>
+    </item>
+    
+    <item>
+      <title>Age Is Just A Number…Statistically Speaking</title>
+      <link>/post/2018-11-12-crime-age-stats/</link>
+      <pubDate>Mon, 12 Nov 2018 21:09:00 +0000</pubDate>
+      
+      <guid>/post/2018-11-12-crime-age-stats/</guid>
+      <description>library(tidyverse) library(lubridate) bulk_dat &amp;lt;- read_csv(&amp;quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&amp;quot;, col_types = cols(offensereportingofficerbadge2 = col_character(), offensebeat = col_character())) %&amp;gt;% mutate(offensedate = as.Date(offensedate, format = &amp;quot;%m/%d/%Y&amp;quot;)) bulk_dat &amp;lt;- bulk_dat %&amp;gt;% mutate(hour = hour(offensetimeofoccurence2)) %&amp;gt;% mutate(age = as.integer(offenseage)) %&amp;gt;% mutate(month = month(offensedate)) bulk_dat %&amp;gt;% ggplot(aes(age)) + geom_histogram(aes(y = ..density..), binwidth = 5, color = &amp;quot;black&amp;quot;, fill = &amp;quot;white&amp;quot;) + geom_density(alpha = .2, fill = &amp;quot;blue&amp;quot;) + geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &amp;quot;red&amp;quot;, linetype = &amp;quot;dashed&amp;quot;, size = 1) bulk_dat %&amp;gt;% ggplot(aes(hour)) + geom_histogram(aes(y = .</description>
+    </item>
+    
+    <item>
       <title>Health and Economic Impact of Storms and Severe Weather Events</title>
       <link>/post/2018-09-02-reproducible-research/</link>
       <pubDate>Sun, 02 Sep 2018 21:09:00 +0000</pubDate>
