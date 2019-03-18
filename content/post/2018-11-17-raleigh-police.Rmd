@@ -30,14 +30,12 @@ library(RANN2)
 Would strongly recommend downloading this data and reading from your computer. Here I am reading the data directly from the GeoJSON API endpoints.
 
 ```{r}
-raleigh_police <- read_sf("https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson",
-                          "OGRGeoJSON")
+raleigh_police <- read_sf("https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson")
 
-wake_police_dpts <- read_sf("https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson",
-                            "OGRGeoJSON")
+wake_police_dpts <- read_sf("https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson")
 
-raleigh_limits <- read_sf("https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson",
-                       "OGRGeoJSON") %>%
+raleigh_limits <- read_sf("https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson") %>%
+  
   filter(LONG_NAME == "RALEIGH")
 ```
 

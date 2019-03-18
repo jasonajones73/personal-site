@@ -23,14 +23,12 @@ library(RANN2)</code></pre>
 <div id="retrieve-data" class="section level2">
 <h2>Retrieve Data</h2>
 <p>Would strongly recommend downloading this data and reading from your computer. Here I am reading the data directly from the GeoJSON API endpoints.</p>
-<pre class="r"><code>raleigh_police &lt;- read_sf(&quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&quot;,
-                          &quot;OGRGeoJSON&quot;)
+<pre class="r"><code>raleigh_police &lt;- read_sf(&quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&quot;)
 
-wake_police_dpts &lt;- read_sf(&quot;https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson&quot;,
-                            &quot;OGRGeoJSON&quot;)
+wake_police_dpts &lt;- read_sf(&quot;https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson&quot;)
 
-raleigh_limits &lt;- read_sf(&quot;https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson&quot;,
-                       &quot;OGRGeoJSON&quot;) %&gt;%
+raleigh_limits &lt;- read_sf(&quot;https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson&quot;) %&gt;%
+  
   filter(LONG_NAME == &quot;RALEIGH&quot;)</code></pre>
 </div>
 <div id="filter-missing-data" class="section level2">

@@ -31,14 +31,12 @@ library(RANN2)&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;retrieve-data&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Retrieve Data&lt;/h2&gt;
 &lt;p&gt;Would strongly recommend downloading this data and reading from your computer. Here I am reading the data directly from the GeoJSON API endpoints.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raleigh_police &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&amp;quot;,
-                          &amp;quot;OGRGeoJSON&amp;quot;)
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raleigh_police &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&amp;quot;)
 
-wake_police_dpts &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson&amp;quot;,
-                            &amp;quot;OGRGeoJSON&amp;quot;)
+wake_police_dpts &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson&amp;quot;)
 
-raleigh_limits &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson&amp;quot;,
-                       &amp;quot;OGRGeoJSON&amp;quot;) %&amp;gt;%
+raleigh_limits &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson&amp;quot;) %&amp;gt;%
+  
   filter(LONG_NAME == &amp;quot;RALEIGH&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;filter-missing-data&#34; class=&#34;section level2&#34;&gt;

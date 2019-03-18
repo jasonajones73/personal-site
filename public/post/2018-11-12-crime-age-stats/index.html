@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academic 3.0.0">
-  <meta name="generator" content="Hugo 0.50" />
+  <meta name="generator" content="Hugo 0.54.0" />
   <meta name="author" content="Jason Jones">
 
   
@@ -15,7 +15,7 @@
   
     
   
-  <meta name="description" content="library(tidyverse) library(lubridate) bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;, col_types = cols(offensereportingofficerbadge2 = col_character(), offensebeat = col_character())) %&gt;% mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;)) bulk_dat &lt;- bulk_dat %&gt;% mutate(hour = hour(offensetimeofoccurence2)) %&gt;% mutate(age = as.integer(offenseage)) %&gt;% mutate(month = month(offensedate)) bulk_dat %&gt;% ggplot(aes(age)) &#43; geom_histogram(aes(y = ..density..), binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) &#43; geom_density(alpha = .2, fill = &quot;blue&quot;) &#43; geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1) bulk_dat %&gt;% ggplot(aes(hour)) &#43; geom_histogram(aes(y = .">
+  <meta name="description" content="library(tidyverse)library(lubridate)bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;,col_types = cols(offensereportingofficerbadge2 = col_character(),offensebeat = col_character())) %&gt;%mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;))bulk_dat &lt;- bulk_dat %&gt;%mutate(hour = hour(offensetimeofoccurence2)) %&gt;%mutate(age = as.integer(offenseage)) %&gt;%mutate(month = month(offensedate))bulk_dat %&gt;%ggplot(aes(age)) &#43;geom_histogram(aes(y = ..density..),binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) &#43;geom_density(alpha = .2, fill = &quot;blue&quot;) &#43;geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)bulk_dat %&gt;%ggplot(aes(hour)) &#43;geom_histogram(aes(y = .">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/2018-11-12-crime-age-stats/">
@@ -96,7 +96,7 @@
   <meta property="og:site_name" content="JASON JONES">
   <meta property="og:url" content="/post/2018-11-12-crime-age-stats/">
   <meta property="og:title" content="Age Is Just A Number…Statistically Speaking | JASON JONES">
-  <meta property="og:description" content="library(tidyverse) library(lubridate) bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;, col_types = cols(offensereportingofficerbadge2 = col_character(), offensebeat = col_character())) %&gt;% mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;)) bulk_dat &lt;- bulk_dat %&gt;% mutate(hour = hour(offensetimeofoccurence2)) %&gt;% mutate(age = as.integer(offenseage)) %&gt;% mutate(month = month(offensedate)) bulk_dat %&gt;% ggplot(aes(age)) &#43; geom_histogram(aes(y = ..density..), binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) &#43; geom_density(alpha = .2, fill = &quot;blue&quot;) &#43; geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1) bulk_dat %&gt;% ggplot(aes(hour)) &#43; geom_histogram(aes(y = .">
+  <meta property="og:description" content="library(tidyverse)library(lubridate)bulk_dat &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/ftja-9jxd/rows.csv&quot;,col_types = cols(offensereportingofficerbadge2 = col_character(),offensebeat = col_character())) %&gt;%mutate(offensedate = as.Date(offensedate, format = &quot;%m/%d/%Y&quot;))bulk_dat &lt;- bulk_dat %&gt;%mutate(hour = hour(offensetimeofoccurence2)) %&gt;%mutate(age = as.integer(offenseage)) %&gt;%mutate(month = month(offensedate))bulk_dat %&gt;%ggplot(aes(age)) &#43;geom_histogram(aes(y = ..density..),binwidth = 5, color = &quot;black&quot;, fill = &quot;white&quot;) &#43;geom_density(alpha = .2, fill = &quot;blue&quot;) &#43;geom_vline(aes(xintercept = mean(age, na.rm = TRUE)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1)bulk_dat %&gt;%ggplot(aes(hour)) &#43;geom_histogram(aes(y = .">
   
   
     

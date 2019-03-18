@@ -1,0 +1,512 @@
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY)) +
+viridis::scale_color_viridis(option = "magma", discrete = TRUE) +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY)) +
+viridis::scale_color_viridis(option = "magma", discrete = TRUE) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+viridis::scale_color_viridis(option = "magma", discrete = TRUE) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+viridis::scale_color_viridis(discrete = TRUE) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+scale_color_brewer(palette = "YlGnBu") +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+viridis::scale_color_viridis(discrete = TRUE) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+scale_color_brewer(palette = "Spectral") +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.6) +
+scale_color_brewer(palette = "Spectral", direction = -1) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(sf)
+library(tidyverse)
+library(RANN2)
+raleigh_police <- read_sf("https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson",
+"OGRGeoJSON")
+wake_police_dpts <- read_sf("https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson",
+"OGRGeoJSON")
+raleigh_limits <- read_sf("https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson",
+"OGRGeoJSON") %>%
+filter(LONG_NAME == "RALEIGH")
+raleigh_police <- raleigh_police %>%
+filter(is.na(latitude) != TRUE)
+plot(raleigh_police$geometry, col = "grey")
+plot(wake_police_dpts$geometry, col = "grey")
+st_crs(raleigh_police)
+st_crs(wake_police_dpts)
+raleigh_police_nested <- raleigh_police %>%
+group_by(crime_description) %>%
+nest()
+f <- function(dat) {
+nn2(st_coordinates(wake_police_dpts), st_coordinates(dat), k =1) %>%
+data.frame() %>%
+as_tibble() %>%
+group_by(nn.idx) %>%
+summarise(cnt = n()) %>%
+right_join(wake_police_dpts, by = c("nn.idx" = "OBJECTID")) %>%
+select(-nn.idx) %>%
+filter(is.na(cnt) != TRUE)
+}
+raleigh_police_nested <- raleigh_police_nested %>%
+mutate(closest = purrr::map(.x = data, .f = ~f(.x)))
+raleigh_police_nested <- raleigh_police_nested %>%
+mutate(closest = purrr::map(.x = data, .f = ~f(.x)))
+crime_des <- "Traffic/DWI (Driving While Impaired)"
+dat <- raleigh_police_nested %>%
+filter(crime_description == crime_des) %>%
+.$closest %>%
+.[[1]] %>%
+st_as_sf()
+# Also creating secondary object for density plots
+dat2 <- raleigh_police %>%
+filter(crime_description == crime_des) %>%
+st_coordinates() %>%
+as_tibble()
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+stat_density_2d(aes(X, Y, fill = ..level..), geom = "polygon", alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_hex(aes(X,Y), alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+crime_des <- "Assault/Simple"
+dat <- raleigh_police_nested %>%
+filter(crime_description == crime_des) %>%
+.$closest %>%
+.[[1]] %>%
+st_as_sf()
+# Also creating secondary object for density plots
+dat2 <- raleigh_police %>%
+filter(crime_description == crime_des) %>%
+st_coordinates() %>%
+as_tibble()
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+stat_density_2d(aes(X, Y, fill = ..level..), geom = "polygon", alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_hex(aes(X,Y), alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+crime_des <- "Traffic/DWI (Driving While Impaired)"
+dat <- raleigh_police_nested %>%
+filter(crime_description == crime_des) %>%
+.$closest %>%
+.[[1]] %>%
+st_as_sf()
+# Also creating secondary object for density plots
+dat2 <- raleigh_police %>%
+filter(crime_description == crime_des) %>%
+st_coordinates() %>%
+as_tibble()
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+stat_density_2d(aes(X, Y, fill = ..level..), geom = "polygon", alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_hex(aes(X,Y), alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1) +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des)) +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(sf)
+library(tidyverse)
+library(RANN2)
+raleigh_police <- read_sf("https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson",
+"OGRGeoJSON")
+wake_police_dpts <- read_sf("https://opendata.arcgis.com/datasets/23094dc3a7b84682898c0a2c27290066_0.geojson",
+"OGRGeoJSON")
+raleigh_limits <- read_sf("https://opendata.arcgis.com/datasets/4303065aa95441308cc7224cf6246782_0.geojson",
+"OGRGeoJSON") %>%
+filter(LONG_NAME == "RALEIGH")
+raleigh_police <- raleigh_police %>%
+filter(is.na(latitude) != TRUE)
+plot(raleigh_police$geometry, col = "grey")
+plot(wake_police_dpts$geometry, col = "grey")
+st_crs(raleigh_police)
+st_crs(wake_police_dpts)
+raleigh_police_nested <- raleigh_police %>%
+group_by(crime_description) %>%
+nest()
+f <- function(dat) {
+nn2(st_coordinates(wake_police_dpts), st_coordinates(dat), k =1) %>%
+data.frame() %>%
+as_tibble() %>%
+group_by(nn.idx) %>%
+summarise(cnt = n()) %>%
+right_join(wake_police_dpts, by = c("nn.idx" = "OBJECTID")) %>%
+select(-nn.idx) %>%
+filter(is.na(cnt) != TRUE)
+}
+raleigh_police_nested <- raleigh_police_nested %>%
+mutate(closest = purrr::map(.x = data, .f = ~f(.x)))
+crime_des <- "Traffic/DWI (Driving While Impaired)"
+dat <- raleigh_police_nested %>%
+filter(crime_description == crime_des) %>%
+.$closest %>%
+.[[1]] %>%
+st_as_sf()
+# Also creating secondary object for density plots
+dat2 <- raleigh_police %>%
+filter(crime_description == crime_des) %>%
+st_coordinates() %>%
+as_tibble()
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+stat_density_2d(aes(X, Y, fill = ..level..), geom = "polygon", alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des),
+caption = "Author: Jason Jones \nSource: http://data-ral.opendata.arcgis.com/") +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_hex(aes(X,Y), alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des),
+caption = "Author: Jason Jones \nSource: http://data-ral.opendata.arcgis.com/") +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1, name = "Agency") +
+scale_size(name = "Count of Incidents") +
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des),
+caption = "Author: Jason Jones \nSource: http://data-ral.opendata.arcgis.com/") +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+crime_des <- "Assault/Simple"
+dat <- raleigh_police_nested %>%
+filter(crime_description == crime_des) %>%
+.$closest %>%
+.[[1]] %>%
+st_as_sf()
+# Also creating secondary object for density plots
+dat2 <- raleigh_police %>%
+filter(crime_description == crime_des) %>%
+st_coordinates() %>%
+as_tibble()
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+stat_density_2d(aes(X, Y, fill = ..level..), geom = "polygon", alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des),
+caption = "Author: Jason Jones \nSource: http://data-ral.opendata.arcgis.com/") +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat2 %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_hex(aes(X,Y), alpha = 0.6) +
+viridis::scale_fill_viridis(option = "magma", direction = -1, name = "Density") +
+labs(title = sprintf("Density of %s Incidents in Raleigh, NC", crime_des),
+caption = "Author: Jason Jones \nSource: http://data-ral.opendata.arcgis.com/") +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+dat %>%
+st_coordinates() %>%
+as_tibble() %>%
+mutate(cnt = dat$cnt, AGENCY = dat$AGENCY) %>%
+ggplot() +
+geom_sf(data = raleigh_limits, color = "grey", fill = NA) +
+geom_point(aes(X, Y, size = cnt, color = AGENCY), alpha = 0.8) +
+scale_color_brewer(palette = "Spectral", direction = -1, name = "Agency") +
+scale_size(name = "Count of Incidents")
+labs(title = sprintf("Clustering of %s Incidents by LE Stations", crime_des),
+caption = "Author: Jason Jones \nSource: http://data-ral.opendata.arcgis.com/") +
+theme(text = element_text(family = "Roboto"),
+plot.title = element_text(size = 14),
+panel.background = element_blank(),
+axis.text = element_blank(),
+axis.title = element_blank(),
+axis.ticks = element_blank(),
+axis.line = element_blank())
+blogdown::serve_site()
