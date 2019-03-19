@@ -11,6 +11,353 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>I Like It When You Call Me Large SpatialPolygonsDataFrame</title>
+      <link>/post/2019-03-18-elon-geospatial/</link>
+      <pubDate>Tue, 19 Mar 2019 21:09:00 +0000</pubDate>
+      
+      <guid>/post/2019-03-18-elon-geospatial/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Welcome to the wonderful world of R-Spatial! I really enjoy playing around with spatial data in R and for some reason find it much easier than ArcGIS (#sorrynotsorry Esri). Please keep in mind, as with everything I do in R, I am self taught and rely heavily on publicly available resources. My way of doing things may not always be the best or perfect, it is just how I was able to make sense of it.&lt;/p&gt;
+&lt;p&gt;One of the beautiful things about R is that there are many ways to get to your destination (in most cases). If you stumble across something in my code that is just wrong, could be way more efficient, and/or makes you cry into your cereal - please let me know! You definitely won’t hurt my feelings. I just want to get better!&lt;/p&gt;
+&lt;p&gt;In this post I am going to walk through some things that I have found myself doing regularly. A majority of the data I come across does not have a spatial component to it already or may not be associated with the particular geography that I need. Hopefully, I can demonstrate for you one approach to working through this in R.&lt;/p&gt;
+&lt;p&gt;The flow of this generally should be:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Pull down data with coordinates&lt;/li&gt;
+&lt;li&gt;Pull down polygon data&lt;/li&gt;
+&lt;li&gt;Verify overlap and matching projections&lt;/li&gt;
+&lt;li&gt;Combine points and polygons&lt;/li&gt;
+&lt;li&gt;Map aggressively&lt;/li&gt;
+&lt;li&gt;Huzzah!&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;load-packages&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Load Packages&lt;/h1&gt;
+&lt;p&gt;We will start by doing the obvious and loading our packages. You may notice me references some packages this way: &lt;code&gt;cowplot::plot_grid()&lt;/code&gt;. That just means that I opted not to load the entire package since I may only be using it one time. You may already know that but some of may not so just bear with me.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(sf)
+library(tidyverse)
+library(sp)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-custom-theme&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Create Custom Theme&lt;/h1&gt;
+&lt;p&gt;Here, I am quickly defining some thematic elements for my plots so I don’t have to repeat them. I really need to get better about doing this!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;jason_theme &amp;lt;- theme(plot.title = element_text(size = 14),
+        panel.background = element_blank(),
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;download-police-incidents&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Download Police Incidents&lt;/h1&gt;
+&lt;p&gt;I use the GeoJSON link on the &lt;a href=&#34;https://data-ral.opendata.arcgis.com/&#34;&gt;Raleigh Open Data Portal&lt;/a&gt; to download police incidents.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/elon_class/police_incidents.png&#34; /&gt;
+
+&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;filter-missing-coordinates&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Filter Missing Coordinates&lt;/h1&gt;
+&lt;p&gt;Quickly filter records that are missing coordinates.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents &amp;lt;- police_incidents %&amp;gt;%
+  filter(is.na(latitude) != TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-plot&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Test Plot&lt;/h1&gt;
+&lt;p&gt;Let’s just give it a try to make sure everything is working as intended. I am using base R here simply because it is faster.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(police_incidents$geometry)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;download-wake-census-tracts&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Download Wake Census Tracts&lt;/h1&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/elon_class/wake_tracts.png&#34; /&gt;
+
+&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;wake_tracts &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/21d4ff44498a4007beefdcbde6fcd2a9_0.geojson&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-plot-1&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Test Plot&lt;/h1&gt;
+&lt;p&gt;Another base R test plot just to be sure.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(wake_tracts$geometry)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;basic-density-plot&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Basic Density Plot&lt;/h1&gt;
+&lt;p&gt;Great! Looks like everything is working as intended. Before I dive in to combining data, I want to show you a couple cool things you can do with these items in isolation.&lt;/p&gt;
+&lt;div id=&#34;create-tibble-for-density-plotting&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Create Tibble for Density Plotting&lt;/h2&gt;
+&lt;p&gt;In this first step, I am using &lt;code&gt;st_coordinates()&lt;/code&gt; to strip the coordinates out of my police incidents simple feature object. I am then storing those coordinates as a tibble that I can pass to my plot. This is a necessary step for the density plotting that I want to do.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat &amp;lt;- police_incidents %&amp;gt;%
+  st_coordinates() %&amp;gt;%
+  as_tibble()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;density-map&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Density Map&lt;/h2&gt;
+&lt;p&gt;I have everything I need now to do a quick map of the density of police incident points. Notice I use &lt;code&gt;..level..&lt;/code&gt; to access that statistic computed by the call to &lt;code&gt;stat_density_2d&lt;/code&gt;. You can read more about what is happening behind the scenes &lt;a href=&#34;https://stackoverflow.com/questions/32206623/what-does-level-mean-in-ggplotstat-density2d&#34;&gt;here&lt;/a&gt;. Gotta love the R community!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat %&amp;gt;%
+  ggplot() +
+  geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +
+  stat_density_2d(aes(X, Y, fill = ..level..), geom = &amp;quot;polygon&amp;quot;, alpha = 0.6) +
+  scale_fill_viridis_c(&amp;quot;Density&amp;quot;, option = &amp;quot;magma&amp;quot;, direction = -1) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;hexbin-map&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Hexbin Map&lt;/h2&gt;
+&lt;p&gt;Maybe that doesn’t do it for you. Well strap yourself in for a hexbin map!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat %&amp;gt;%
+  ggplot() +
+  geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +
+  geom_hex(aes(X, Y), alpha = 0.6) +
+  scale_fill_viridis_c(&amp;quot;Count&amp;quot;, option = &amp;quot;magma&amp;quot;, direction = -1) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-step-further&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A Step Further&lt;/h1&gt;
+&lt;p&gt;Those are a couple of quick maps you can generate with the data in isolation. Let’s take it a step further and see what we can do if we combine the data.&lt;/p&gt;
+&lt;div id=&#34;convert-to-spatial-objects&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Convert to Spatial Objects&lt;/h2&gt;
+&lt;p&gt;The first thing I need to do is convert both of my simple feature objects to &lt;code&gt;Spatial*DataFrame&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_spatial &amp;lt;- police_incidents %&amp;gt;%
+  filter(is.na(latitude) != TRUE) %&amp;gt;%
+  as_Spatial()
+
+
+wake_spatial &amp;lt;- wake_tracts %&amp;gt;%
+  as_Spatial()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;check-projections&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Check Projections&lt;/h2&gt;
+&lt;p&gt;Now I need to verify that my projections (Coordinated Reference Systems (CRS)) are matching.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ral_crs &amp;lt;- proj4string(police_spatial)
+
+wake_crs &amp;lt;- proj4string(wake_spatial)
+
+
+print(ral_crs == wake_crs)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-overlay&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Create Overlay&lt;/h2&gt;
+&lt;p&gt;True means we are good to go! Now I can use &lt;code&gt;over()&lt;/code&gt; to overlay my police incident points and Wake County census tracts. It will return the census tract attributes that are associated with each police incident record. After I perform the overlay, I am simply binding everything together.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;overlay &amp;lt;- over(police_spatial, wake_spatial) %&amp;gt;%
+  select(GEOID10, NAMELSAD10) %&amp;gt;%
+  cbind(police_spatial@data) %&amp;gt;%
+  select(OBJECTID, GEOID10, NAMELSAD10)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;join-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Join Data&lt;/h2&gt;
+&lt;p&gt;Now to create a nice clean simple featur object, I join by the &lt;code&gt;GEOID&lt;/code&gt;. It is really helpful for you to learn more about these identifiers and how they are constructed if you want to play more with Census data.&lt;/p&gt;
+&lt;p&gt;You can learn more about them here - &lt;a href=&#34;https://www.census.gov/geo/reference/geoidentifiers.html&#34;&gt;Understanding Geographic Identifiers (GEOIDs)&lt;/a&gt;. You will see there how the identifiers are constructed from large to small components. If you are wondering whey this might be important for you, I have lost cost of how many times I have had to piece my own identifiers together from scattered data elements.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final &amp;lt;- police_spatial %&amp;gt;%
+  st_as_sf() %&amp;gt;%
+  left_join(overlay)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-plot-2&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Test Plot&lt;/h2&gt;
+&lt;p&gt;Now I am going to do a quick base R test plot to make sure that everything matched the way I intended.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(police_incidents_final[&amp;quot;GEOID10&amp;quot;])&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-can-you-do-with-this&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;What Can You Do With This?&lt;/h1&gt;
+&lt;div id=&#34;basic-relationship-plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Basic Relationship Plot&lt;/h2&gt;
+&lt;p&gt;I now have some census data combined with my police incident records. Here, I am grouping my data by census tract and then creating a count of incidents by tract. After that, I throw together a quick exploratory plot of the relationship between Vacant Housing and count of police incidents. This is in no way explanatory - just exploratory. Please always do your due diligence before jumping to assumptions in exploratory analysis.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(inc_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, inc_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  filter(inc_count &amp;gt; 100) %&amp;gt;%
+  ggplot(aes(VACANT, inc_count)) +
+  geom_point() +
+  geom_smooth() +
+  theme_minimal() +
+  labs(x = &amp;quot;Vacant Housing&amp;quot;, y = &amp;quot;Police Incident Count&amp;quot;, title = &amp;quot;Relationship Between Police Incidents and Vacant Housing&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-16-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;incident-count-by-census-tract&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Incident Count by Census Tract&lt;/h2&gt;
+&lt;p&gt;Now for the good stuff (or at least I think so)! I want to create a choropleth map of Wake County that is colored based on the count of police incidents in each Census Tract.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(inc_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, inc_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = inc_count)) +
+  scale_fill_viridis_c(&amp;quot;Incident Count&amp;quot;) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;assault-count-by-census-tract&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Assault Count by Census Tract&lt;/h2&gt;
+&lt;p&gt;Now, I am going to go one level deeper and create a choropleth map of Wake County that is colored based on the count of police incidents categorized as ASSAULT.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  filter(crime_category == &amp;quot;ASSAULT&amp;quot;) %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(assault_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, assault_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = assault_count)) +
+  scale_fill_viridis_c(&amp;quot;Assault Count&amp;quot;) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-18-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;spatial-comparison&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Spatial Comparison&lt;/h2&gt;
+&lt;p&gt;What if I want to pul out two features and plot them side by side? Look no further than the &lt;code&gt;cowplot&lt;/code&gt; package!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;map_1 &amp;lt;- police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  filter(crime_category == &amp;quot;ASSAULT&amp;quot;) %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(assault_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, assault_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = assault_count)) +
+  scale_fill_viridis_c(&amp;quot;Assault Count&amp;quot;) +
+  jason_theme
+
+map_2 &amp;lt;- wake_tracts %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = VACANT)) +
+  scale_fill_viridis_c(&amp;quot;Vacant Housing&amp;quot;) +
+  jason_theme
+
+cowplot::plot_grid(map_1, map_2, labels = &amp;quot;AUTO&amp;quot;, nrow = 1, ncol = 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;google-trends&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Google Trends&lt;/h1&gt;
+&lt;p&gt;I wanted to also take a second to explore something that may be more relevant for you. I am not going to walk through this in detail but want to provide it as an example of another pretty cool way you can combine and use spatial data in R.&lt;/p&gt;
+&lt;p&gt;I am going to play around with some &lt;a href=&#34;https://googletrends.github.io/data/&#34;&gt;Google Trends data&lt;/a&gt; published by their &lt;a href=&#34;https://newsinitiative.withgoogle.com/training/&#34;&gt;News Lab&lt;/a&gt;. This is a pretty cool thing they do that is apparently targeted at training journalists to use Google data more effectively.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/elon_class/google.png&#34; /&gt;
+
+&lt;/div&gt;
+&lt;div id=&#34;download-data-separate&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Download Data &amp;amp; Separate&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;google_dat &amp;lt;- read_csv(&amp;quot;https://raw.githubusercontent.com/googletrends/data/master/Search_Data_US_Congressional_District_04Nov2018.csv&amp;quot;)
+
+google_dat_rankings &amp;lt;- google_dat %&amp;gt;%
+  select(1:13) %&amp;gt;%
+  gather(&amp;quot;ranking&amp;quot;, &amp;quot;issue&amp;quot;, 4:13) %&amp;gt;%
+  filter(State == &amp;quot;NC&amp;quot;) %&amp;gt;%
+  mutate(CD115FP = str_remove_all(Code, &amp;quot;[A-Za-z-]+&amp;quot;)) %&amp;gt;%
+  mutate(ranking = str_to_title(ranking))
+
+google_dat_issues &amp;lt;- google_dat %&amp;gt;%
+  select(1:3, 14:142) %&amp;gt;%
+  gather(&amp;quot;other_issue&amp;quot;, &amp;quot;search_freq&amp;quot;, 4:132) %&amp;gt;%
+  filter(State == &amp;quot;NC&amp;quot;) %&amp;gt;%
+  mutate(CD115FP = str_remove_all(Code, &amp;quot;[A-Za-z-]+&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;top-ranked-issues-for-nc&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Top Ranked Issues For NC&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;google_dat_rankings %&amp;gt;%
+  group_by(ranking, issue) %&amp;gt;%
+  summarise(total = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  filter(ranking == &amp;quot;First&amp;quot;) %&amp;gt;%
+  kableExtra::kable() %&amp;gt;%
+  kableExtra::kable_styling(bootstrap_options = c(&amp;quot;striped&amp;quot;, &amp;quot;hover&amp;quot;), full_width = F, position = &amp;quot;left&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table table-striped table-hover&#34; style=&#34;width: auto !important; &#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+ranking
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+issue
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+total
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+First
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Common core
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+First
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Health care
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+12
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;congressional-districts-polygons&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Congressional Districts Polygons&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;districts &amp;lt;- tigris::congressional_districts()
+
+districts_sf &amp;lt;- districts %&amp;gt;%
+  st_as_sf() %&amp;gt;%
+  filter(STATEFP == &amp;quot;37&amp;quot;)
+
+plot(districts_sf[&amp;quot;CD115FP&amp;quot;])&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;labels-health-care-map&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Labels &amp;amp; Health Care Map&lt;/h2&gt;
+&lt;p&gt;I will at least explain here that the first thing I am doing is creating a tibble of the centroids of the congressional district polygons. I am doing this so I can throw some labels on my map as points of reference.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;centroids_df &amp;lt;- districts %&amp;gt;%
+  st_as_sf() %&amp;gt;%
+  filter(STATEFP == &amp;quot;37&amp;quot;) %&amp;gt;%
+  as_Spatial() %&amp;gt;%
+  coordinates() %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  rename(&amp;quot;Long&amp;quot; = V1, &amp;quot;Lat&amp;quot; = V2) %&amp;gt;%
+  mutate(CD115FP = filter(districts@data, STATEFP == &amp;quot;37&amp;quot;)$CD115FP)
+
+google_dat_issues %&amp;gt;%
+  filter(other_issue == &amp;quot;Health care&amp;quot;) %&amp;gt;%
+  select(CD115FP, search_freq) %&amp;gt;%
+  right_join(districts_sf) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = search_freq)) +
+  scale_fill_viridis_c(&amp;quot;Search Frequency&amp;quot;, direction = -1) +
+  geom_label(data = centroids_df, aes(Long, Lat, label = CD115FP)) +
+  labs(title = &amp;quot;Google Search Frequency - Health Care&amp;quot;) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Spatial Exploration - MUSA Masterclass</title>
       <link>/post/2018-11-17-raleigh-police/</link>
       <pubDate>Sun, 18 Nov 2018 21:09:00 +0000</pubDate>
@@ -807,200 +1154,6 @@ SYSTEM
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Geospatial Data &amp; Visualization</title>
-      <link>/post/2019-03-18-elon-geospatial/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2019-03-18-elon-geospatial/</guid>
-      <description>
-
-
-&lt;div id=&#34;load-packages&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Load Packages&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(sf)
-library(tidyverse)
-library(sp)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;create-custom-theme&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Create Custom Theme&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;jason_theme &amp;lt;- theme(plot.title = element_text(size = 14),
-        panel.background = element_blank(),
-        axis.text = element_blank(),
-        axis.title = element_blank(),
-        axis.ticks = element_blank(),
-        axis.line = element_blank())&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;download-police-incidents&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Download Police Incidents&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;filter-missing-coordinates&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Filter Missing Coordinates&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents &amp;lt;- police_incidents %&amp;gt;%
-  filter(is.na(latitude) != TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;test-plot&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Test Plot&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(police_incidents$geometry)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;download-wake-census-tracts&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Download Wake Census Tracts&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;wake_tracts &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/21d4ff44498a4007beefdcbde6fcd2a9_0.geojson&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;test-plot-1&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Test Plot&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(wake_tracts$geometry)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;basic-density-plot&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Basic Density Plot&lt;/h1&gt;
-&lt;div id=&#34;create-tibble-for-density-plotting&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Create Tibble for Density Plotting&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat &amp;lt;- police_incidents %&amp;gt;%
-  st_coordinates() %&amp;gt;%
-  as_tibble()&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;desnity-map&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Desnity Map&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat %&amp;gt;%
-  ggplot() +
-  geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +
-  stat_density_2d(aes(X, Y, fill = ..level..), geom = &amp;quot;polygon&amp;quot;, alpha = 0.6) +
-  scale_fill_viridis_c(&amp;quot;Density&amp;quot;, option = &amp;quot;magma&amp;quot;, direction = -1) +
-  jason_theme&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;hexbin-map&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Hexbin Map&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat %&amp;gt;%
-  ggplot() +
-  geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +
-  geom_hex(aes(X, Y), alpha = 0.6) +
-  scale_fill_viridis_c(option = &amp;quot;magma&amp;quot;, direction = -1) +
-  jason_theme&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;a-step-further&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;A Step Further&lt;/h1&gt;
-&lt;div id=&#34;convert-to-spatial-objects&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Convert to Spatial Objects&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_spatial &amp;lt;- police_incidents %&amp;gt;%
-  filter(is.na(latitude) != TRUE) %&amp;gt;%
-  as_Spatial()
-
-
-wake_spatial &amp;lt;- wake_tracts %&amp;gt;%
-  as_Spatial()&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;check-projections&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Check Projections&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ral_crs &amp;lt;- proj4string(police_spatial)
-
-wake_crs &amp;lt;- proj4string(wake_spatial)
-
-
-print(ral_crs == wake_crs)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;create-overlay&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Create Overlay&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;overlay &amp;lt;- over(police_spatial, wake_spatial) %&amp;gt;%
-  select(GEOID10, NAMELSAD10) %&amp;gt;%
-  cbind(police_spatial@data) %&amp;gt;%
-  select(OBJECTID, GEOID10, NAMELSAD10)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;join-data&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Join Data&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final &amp;lt;- police_spatial %&amp;gt;%
-  st_as_sf() %&amp;gt;%
-  left_join(overlay)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;test-plot-2&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Test Plot&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(police_incidents_final[&amp;quot;GEOID10&amp;quot;])&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;what-can-you-do-with-this&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;What Can You Do With This?&lt;/h1&gt;
-&lt;div id=&#34;basic-relationship-plot&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Basic Relationship Plot&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
-  as_tibble() %&amp;gt;%
-  group_by(GEOID10) %&amp;gt;%
-  summarise(inc_count = n()) %&amp;gt;%
-  ungroup() %&amp;gt;%
-  select(GEOID10, inc_count) %&amp;gt;%
-  right_join(wake_tracts) %&amp;gt;%
-  filter(inc_count &amp;gt; 100) %&amp;gt;%
-  ggplot(aes(VACANT, inc_count)) +
-  geom_point() +
-  geom_smooth() +
-  theme_minimal()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-16-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;incident-count-by-census-tract&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Incident Count by Census Tract&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
-  as_tibble() %&amp;gt;%
-  group_by(GEOID10) %&amp;gt;%
-  summarise(inc_count = n()) %&amp;gt;%
-  ungroup() %&amp;gt;%
-  select(GEOID10, inc_count) %&amp;gt;%
-  right_join(wake_tracts) %&amp;gt;%
-  ggplot() +
-  geom_sf(aes(fill = inc_count)) +
-  scale_fill_viridis_c(&amp;quot;Incident Count&amp;quot;) +
-  jason_theme&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;assault-count-by-census-tract&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Assault Count by Census Tract&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
-  as_tibble() %&amp;gt;%
-  filter(crime_category == &amp;quot;ASSAULT&amp;quot;) %&amp;gt;%
-  group_by(GEOID10) %&amp;gt;%
-  summarise(assault_count = n()) %&amp;gt;%
-  ungroup() %&amp;gt;%
-  select(GEOID10, assault_count) %&amp;gt;%
-  right_join(wake_tracts) %&amp;gt;%
-  ggplot() +
-  geom_sf(aes(fill = assault_count)) +
-  scale_fill_viridis_c(&amp;quot;Assault Count&amp;quot;) +
-  jason_theme&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-18-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;spatial-comparison&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Spatial Comparison&lt;/h2&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;map_1 &amp;lt;- police_incidents_final %&amp;gt;%
-  as_tibble() %&amp;gt;%
-  filter(crime_category == &amp;quot;ASSAULT&amp;quot;) %&amp;gt;%
-  group_by(GEOID10) %&amp;gt;%
-  summarise(assault_count = n()) %&amp;gt;%
-  ungroup() %&amp;gt;%
-  select(GEOID10, assault_count) %&amp;gt;%
-  right_join(wake_tracts) %&amp;gt;%
-  ggplot() +
-  geom_sf(aes(fill = assault_count)) +
-  scale_fill_viridis_c(&amp;quot;Assault Count&amp;quot;) +
-  jason_theme
-
-map_2 &amp;lt;- wake_tracts %&amp;gt;%
-  ggplot() +
-  geom_sf(aes(fill = VACANT)) +
-  scale_fill_viridis_c(&amp;quot;Vacant Housing&amp;quot;) +
-  jason_theme
-
-cowplot::plot_grid(map_1, map_2, labels = &amp;quot;AUTO&amp;quot;, nrow = 1, ncol = 2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 </description>
     </item>
     
