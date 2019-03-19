@@ -811,6 +811,200 @@ SYSTEM
     </item>
     
     <item>
+      <title>Geospatial Data &amp; Visualization</title>
+      <link>/post/2019-03-18-elon-geospatial/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-03-18-elon-geospatial/</guid>
+      <description>
+
+
+&lt;div id=&#34;load-packages&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Load Packages&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(sf)
+library(tidyverse)
+library(sp)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-custom-theme&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Create Custom Theme&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;jason_theme &amp;lt;- theme(plot.title = element_text(size = 14),
+        panel.background = element_blank(),
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;download-police-incidents&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Download Police Incidents&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;filter-missing-coordinates&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Filter Missing Coordinates&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents &amp;lt;- police_incidents %&amp;gt;%
+  filter(is.na(latitude) != TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-plot&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Test Plot&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(police_incidents$geometry)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;download-wake-census-tracts&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Download Wake Census Tracts&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;wake_tracts &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/21d4ff44498a4007beefdcbde6fcd2a9_0.geojson&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-plot-1&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Test Plot&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(wake_tracts$geometry)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;basic-density-plot&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Basic Density Plot&lt;/h1&gt;
+&lt;div id=&#34;create-tibble-for-density-plotting&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Create Tibble for Density Plotting&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat &amp;lt;- police_incidents %&amp;gt;%
+  st_coordinates() %&amp;gt;%
+  as_tibble()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;desnity-map&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Desnity Map&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat %&amp;gt;%
+  ggplot() +
+  geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +
+  stat_density_2d(aes(X, Y, fill = ..level..), geom = &amp;quot;polygon&amp;quot;, alpha = 0.6) +
+  scale_fill_viridis_c(&amp;quot;Density&amp;quot;, option = &amp;quot;magma&amp;quot;, direction = -1) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;hexbin-map&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Hexbin Map&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dens_dat %&amp;gt;%
+  ggplot() +
+  geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +
+  geom_hex(aes(X, Y), alpha = 0.6) +
+  scale_fill_viridis_c(option = &amp;quot;magma&amp;quot;, direction = -1) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-step-further&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A Step Further&lt;/h1&gt;
+&lt;div id=&#34;convert-to-spatial-objects&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Convert to Spatial Objects&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_spatial &amp;lt;- police_incidents %&amp;gt;%
+  filter(is.na(latitude) != TRUE) %&amp;gt;%
+  as_Spatial()
+
+
+wake_spatial &amp;lt;- wake_tracts %&amp;gt;%
+  as_Spatial()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;check-projections&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Check Projections&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ral_crs &amp;lt;- proj4string(police_spatial)
+
+wake_crs &amp;lt;- proj4string(wake_spatial)
+
+
+print(ral_crs == wake_crs)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-overlay&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Create Overlay&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;overlay &amp;lt;- over(police_spatial, wake_spatial) %&amp;gt;%
+  select(GEOID10, NAMELSAD10) %&amp;gt;%
+  cbind(police_spatial@data) %&amp;gt;%
+  select(OBJECTID, GEOID10, NAMELSAD10)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;join-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Join Data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final &amp;lt;- police_spatial %&amp;gt;%
+  st_as_sf() %&amp;gt;%
+  left_join(overlay)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-plot-2&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Test Plot&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(police_incidents_final[&amp;quot;GEOID10&amp;quot;])&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-can-you-do-with-this&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;What Can You Do With This?&lt;/h1&gt;
+&lt;div id=&#34;basic-relationship-plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Basic Relationship Plot&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(inc_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, inc_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  filter(inc_count &amp;gt; 100) %&amp;gt;%
+  ggplot(aes(VACANT, inc_count)) +
+  geom_point() +
+  geom_smooth() +
+  theme_minimal()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-16-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;incident-count-by-census-tract&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Incident Count by Census Tract&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(inc_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, inc_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = inc_count)) +
+  scale_fill_viridis_c(&amp;quot;Incident Count&amp;quot;) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;assault-count-by-census-tract&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Assault Count by Census Tract&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  filter(crime_category == &amp;quot;ASSAULT&amp;quot;) %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(assault_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, assault_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = assault_count)) +
+  scale_fill_viridis_c(&amp;quot;Assault Count&amp;quot;) +
+  jason_theme&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-18-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;spatial-comparison&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Spatial Comparison&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;map_1 &amp;lt;- police_incidents_final %&amp;gt;%
+  as_tibble() %&amp;gt;%
+  filter(crime_category == &amp;quot;ASSAULT&amp;quot;) %&amp;gt;%
+  group_by(GEOID10) %&amp;gt;%
+  summarise(assault_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(GEOID10, assault_count) %&amp;gt;%
+  right_join(wake_tracts) %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = assault_count)) +
+  scale_fill_viridis_c(&amp;quot;Assault Count&amp;quot;) +
+  jason_theme
+
+map_2 &amp;lt;- wake_tracts %&amp;gt;%
+  ggplot() +
+  geom_sf(aes(fill = VACANT)) +
+  scale_fill_viridis_c(&amp;quot;Vacant Housing&amp;quot;) +
+  jason_theme
+
+cowplot::plot_grid(map_1, map_2, labels = &amp;quot;AUTO&amp;quot;, nrow = 1, ncol = 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-03-18-elon-geospatial_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Slides</title>
       <link>/slides/example-slides/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

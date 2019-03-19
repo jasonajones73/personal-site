@@ -53,5 +53,14 @@ library(tidyverse) library(pdftools) library(tidytext) library(knitr) library(ka
 download.file(&amp;quot;https://www.raleighnc.gov/content/BudgetManagement/Documents/Budget/Archive/2018/FY2018AdoptedBudget20160612.pdf&amp;quot;, &amp;quot;FY2018AdoptedBudget.pdf&amp;quot;, mode = &amp;quot;wb&amp;quot;) txt = pdf_text(&amp;quot;FY2018AdoptedBudget.pdf&amp;quot;) unlink(&amp;quot;FY2018AdoptedBudget.pdf&amp;quot;)  Create Data Frame Create a page number character vector, create a data frame by binding the page number character vector with the extracted text, and finally “unnest” all of the page text into individual words.</description>
     </item>
     
+    <item>
+      <title>Geospatial Data &amp; Visualization</title>
+      <link>/post/2019-03-18-elon-geospatial/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-03-18-elon-geospatial/</guid>
+      <description>Load Packageslibrary(sf)library(tidyverse)library(sp)Create Custom Themejason_theme &amp;lt;- theme(plot.title = element_text(size = 14),panel.background = element_blank(),axis.text = element_blank(),axis.title = element_blank(),axis.ticks = element_blank(),axis.line = element_blank())Download Police Incidentspolice_incidents &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson&amp;quot;)Filter Missing Coordinatespolice_incidents &amp;lt;- police_incidents %&amp;gt;%filter(is.na(latitude) != TRUE)Test Plotplot(police_incidents$geometry)Download Wake Census Tractswake_tracts &amp;lt;- read_sf(&amp;quot;https://opendata.arcgis.com/datasets/21d4ff44498a4007beefdcbde6fcd2a9_0.geojson&amp;quot;)Test Plotplot(wake_tracts$geometry)Basic Density PlotCreate Tibble for Density Plottingdens_dat &amp;lt;- police_incidents %&amp;gt;%st_coordinates() %&amp;gt;%as_tibble()Desnity Mapdens_dat %&amp;gt;%ggplot() +geom_sf(data = wake_tracts, color = &amp;quot;grey&amp;quot;, fill = NA) +stat_density_2d(aes(X, Y, fill = .</description>
+    </item>
+    
   </channel>
 </rss>

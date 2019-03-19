@@ -1,0 +1,260 @@
+---
+title: "Geospatial Data & Visualization"
+author: "Jason A. Jones"
+date: "March 12, 2019"
+output:
+  html_document:
+    theme: cerulean
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+
+# Load Packages
+```{r}
+library(sf)
+library(tidyverse)
+library(sp)
+```
+
+
+# Create Custom Theme
+```{r}
+jason_theme <- theme(plot.title = element_text(size = 14),
+        panel.background = element_blank(),
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
+```
+
+
+# Download Police Incidents
+```{r}
+police_incidents <- read_sf("https://opendata.arcgis.com/datasets/24c0b37fa9bb4e16ba8bcaa7e806c615_0.geojson")
+```
+
+
+# Filter Missing Coordinates
+```{r}
+police_incidents <- police_incidents %>%
+  filter(is.na(latitude) != TRUE)
+```
+
+
+# Test Plot
+```{r}
+plot(police_incidents$geometry)
+```
+
+
+# Download Wake Census Tracts
+```{r}
+wake_tracts <- read_sf("https://opendata.arcgis.com/datasets/21d4ff44498a4007beefdcbde6fcd2a9_0.geojson")
+```
+
+
+# Test Plot
+```{r}
+plot(wake_tracts$geometry)
+```
+
+
+# Basic Density Plot
+
+## Create Tibble for Density Plotting
+```{r}
+dens_dat <- police_incidents %>%
+  st_coordinates() %>%
+  as_tibble()
+```
+
+
+## Desnity Map
+```{r}
+dens_dat %>%
+  ggplot() +
+  geom_sf(data = wake_tracts, color = "grey", fill = NA) +
+  stat_density_2d(aes(X, Y, fill = ..level..), geom = "polygon", alpha = 0.6) +
+  scale_fill_viridis_c("Density", option = "magma", direction = -1) +
+  jason_theme
+```
+
+
+## Hexbin Map
+```{r}
+dens_dat %>%
+  ggplot() +
+  geom_sf(data = wake_tracts, color = "grey", fill = NA) +
+  geom_hex(aes(X, Y), alpha = 0.6) +
+  scale_fill_viridis_c(option = "magma", direction = -1) +
+  jason_theme
+```
+
+
+# A Step Further
+
+## Convert to Spatial Objects
+```{r}
+police_spatial <- police_incidents %>%
+  filter(is.na(latitude) != TRUE) %>%
+  as_Spatial()
+
+
+wake_spatial <- wake_tracts %>%
+  as_Spatial()
+```
+
+
+## Check Projections
+```{r}
+ral_crs <- proj4string(police_spatial)
+
+wake_crs <- proj4string(wake_spatial)
+
+
+print(ral_crs == wake_crs)
+```
+
+
+## Create Overlay
+```{r}
+overlay <- over(police_spatial, wake_spatial) %>%
+  select(GEOID10, NAMELSAD10) %>%
+  cbind(police_spatial@data) %>%
+  select(OBJECTID, GEOID10, NAMELSAD10)
+```
+
+
+## Join Data
+```{r}
+police_incidents_final <- police_spatial %>%
+  st_as_sf() %>%
+  left_join(overlay)
+```
+
+
+## Test Plot
+```{r}
+plot(police_incidents_final["GEOID10"])
+```
+
+
+# What Can You Do With This?
+
+## Basic Relationship Plot
+```{r}
+police_incidents_final %>%
+  as_tibble() %>%
+  group_by(GEOID10) %>%
+  summarise(inc_count = n()) %>%
+  ungroup() %>%
+  select(GEOID10, inc_count) %>%
+  right_join(wake_tracts) %>%
+  filter(inc_count > 100) %>%
+  ggplot(aes(VACANT, inc_count)) +
+  geom_point() +
+  geom_smooth() +
+  theme_minimal()
+```
+
+
+
+## Incident Count by Census Tract
+```{r}
+police_incidents_final %>%
+  as_tibble() %>%
+  group_by(GEOID10) %>%
+  summarise(inc_count = n()) %>%
+  ungroup() %>%
+  select(GEOID10, inc_count) %>%
+  right_join(wake_tracts) %>%
+  ggplot() +
+  geom_sf(aes(fill = inc_count)) +
+  scale_fill_viridis_c("Incident Count") +
+  jason_theme
+```
+
+
+## Assault Count by Census Tract
+```{r}
+police_incidents_final %>%
+  as_tibble() %>%
+  filter(crime_category == "ASSAULT") %>%
+  group_by(GEOID10) %>%
+  summarise(assault_count = n()) %>%
+  ungroup() %>%
+  select(GEOID10, assault_count) %>%
+  right_join(wake_tracts) %>%
+  ggplot() +
+  geom_sf(aes(fill = assault_count)) +
+  scale_fill_viridis_c("Assault Count") +
+  jason_theme
+```
+
+
+## Spatial Comparison
+```{r}
+map_1 <- police_incidents_final %>%
+  as_tibble() %>%
+  filter(crime_category == "ASSAULT") %>%
+  group_by(GEOID10) %>%
+  summarise(assault_count = n()) %>%
+  ungroup() %>%
+  select(GEOID10, assault_count) %>%
+  right_join(wake_tracts) %>%
+  ggplot() +
+  geom_sf(aes(fill = assault_count)) +
+  scale_fill_viridis_c("Assault Count") +
+  jason_theme
+
+map_2 <- wake_tracts %>%
+  ggplot() +
+  geom_sf(aes(fill = VACANT)) +
+  scale_fill_viridis_c("Vacant Housing") +
+  jason_theme
+
+cowplot::plot_grid(map_1, map_2, labels = "AUTO", nrow = 1, ncol = 2)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
