@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>JASON JONES on JASON JONES</title>
@@ -7,8 +6,278 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018</copyright>
-    <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 24 May 2019 21:13:00 +0000</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>#ELGL19 On Twitter: A Brief Synthesis</title>
+      <link>/post/2019-05-24-elgl-twitter/</link>
+      <pubDate>Fri, 24 May 2019 21:13:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-24-elgl-twitter/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/htmlwidgets/htmlwidgets.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;/rmarkdown-libs/jquery/jquery.min.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;/rmarkdown-libs/datatables-css/datatables-crosstalk.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/datatables-binding/datatables.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;link href=&#34;/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;/rmarkdown-libs/crosstalk/css/crosstalk.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/crosstalk/js/crosstalk.min.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;the-boring-bits---hidden-but-viewable&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;The Boring Bits - Hidden But Viewable&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(lubridate)
+library(tidytext)
+library(DT)
+
+tweets &amp;lt;- read_rds(&amp;quot;data/tweets.rds&amp;quot;) %&amp;gt;%
+  as_tibble()
+
+f &amp;lt;- function(time) {
+  x &amp;lt;- time
+  hour(x) &amp;lt;- hour(x)-4
+  return(x)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;hours-of-tweets&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;24 Hours of Tweets&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == FALSE) %&amp;gt;%
+  mutate(created_at = floor_date(created_at, unit = &amp;quot;hour&amp;quot;)) %&amp;gt;%
+  mutate(created_at = f(created_at)) %&amp;gt;%
+  group_by(created_at) %&amp;gt;%
+  summarise(tweet_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  arrange(created_at) %&amp;gt;%
+  mutate(running_total = cumsum(tweet_count)) %&amp;gt;%
+  top_n(24, running_total) %&amp;gt;%
+  ggplot(aes(created_at, running_total)) +
+  geom_col(fill = &amp;quot;#112E51&amp;quot;) +
+  geom_label(aes(label = scales::comma(running_total)), nudge_y = -50, size = 2) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(title = &amp;quot;New Tweets: #ELGL19&amp;quot;,
+       caption = &amp;quot;Author: Jason Jones, @packpridejones&amp;quot;,
+       x = NULL, y = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = &amp;quot;light grey&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-05-24-elgl-twitter_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;retweets-are-tweets-too&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Retweets Are Tweets Too&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == TRUE) %&amp;gt;%
+  mutate(created_at = floor_date(created_at, unit = &amp;quot;hour&amp;quot;)) %&amp;gt;%
+  mutate(created_at = f(created_at)) %&amp;gt;%
+  group_by(created_at) %&amp;gt;%
+  summarise(tweet_count = n()) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  arrange(created_at) %&amp;gt;%
+  mutate(running_total = cumsum(tweet_count)) %&amp;gt;%
+  top_n(24, running_total) %&amp;gt;%
+  ggplot(aes(created_at, running_total)) +
+  geom_col(fill = &amp;quot;#FF7043&amp;quot;) +
+  geom_label(aes(label = scales::comma(running_total)), nudge_y = -50, size = 2) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(title = &amp;quot;Retweets: #ELGL19&amp;quot;,
+       caption = &amp;quot;Author: Jason Jones, @packpridejones&amp;quot;,
+       x = NULL, y = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = &amp;quot;light grey&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-05-24-elgl-twitter_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;biggest-fans&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Biggest Fans&lt;/h1&gt;
+&lt;div id=&#34;most-original-tweets&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Most Original Tweets&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == FALSE) %&amp;gt;%
+  group_by(screen_name) %&amp;gt;%
+  summarise(tweets = n()) %&amp;gt;%
+  arrange(desc(tweets)) %&amp;gt;%
+  top_n(100, tweets) %&amp;gt;%
+  datatable(colnames = c(&amp;quot;Twitter ID&amp;quot;, &amp;quot;Tweet Count&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-1&#34; style=&#34;width:100%;height:auto;&#34; class=&#34;datatables html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-1&#34;&gt;{&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;,&#34;14&#34;,&#34;15&#34;,&#34;16&#34;,&#34;17&#34;,&#34;18&#34;,&#34;19&#34;,&#34;20&#34;,&#34;21&#34;,&#34;22&#34;,&#34;23&#34;,&#34;24&#34;,&#34;25&#34;,&#34;26&#34;,&#34;27&#34;,&#34;28&#34;,&#34;29&#34;,&#34;30&#34;,&#34;31&#34;,&#34;32&#34;,&#34;33&#34;,&#34;34&#34;,&#34;35&#34;,&#34;36&#34;,&#34;37&#34;,&#34;38&#34;,&#34;39&#34;,&#34;40&#34;,&#34;41&#34;,&#34;42&#34;,&#34;43&#34;,&#34;44&#34;,&#34;45&#34;,&#34;46&#34;,&#34;47&#34;,&#34;48&#34;,&#34;49&#34;,&#34;50&#34;,&#34;51&#34;,&#34;52&#34;,&#34;53&#34;,&#34;54&#34;,&#34;55&#34;,&#34;56&#34;,&#34;57&#34;,&#34;58&#34;,&#34;59&#34;,&#34;60&#34;,&#34;61&#34;,&#34;62&#34;,&#34;63&#34;,&#34;64&#34;,&#34;65&#34;,&#34;66&#34;,&#34;67&#34;,&#34;68&#34;,&#34;69&#34;,&#34;70&#34;,&#34;71&#34;,&#34;72&#34;,&#34;73&#34;,&#34;74&#34;,&#34;75&#34;,&#34;76&#34;,&#34;77&#34;,&#34;78&#34;,&#34;79&#34;,&#34;80&#34;,&#34;81&#34;,&#34;82&#34;,&#34;83&#34;,&#34;84&#34;,&#34;85&#34;,&#34;86&#34;,&#34;87&#34;,&#34;88&#34;,&#34;89&#34;,&#34;90&#34;,&#34;91&#34;,&#34;92&#34;,&#34;93&#34;,&#34;94&#34;,&#34;95&#34;,&#34;96&#34;,&#34;97&#34;,&#34;98&#34;,&#34;99&#34;,&#34;100&#34;,&#34;101&#34;,&#34;102&#34;,&#34;103&#34;,&#34;104&#34;,&#34;105&#34;,&#34;106&#34;,&#34;107&#34;,&#34;108&#34;,&#34;109&#34;,&#34;110&#34;,&#34;111&#34;,&#34;112&#34;,&#34;113&#34;,&#34;114&#34;,&#34;115&#34;,&#34;116&#34;,&#34;117&#34;,&#34;118&#34;,&#34;119&#34;,&#34;120&#34;,&#34;121&#34;,&#34;122&#34;,&#34;123&#34;,&#34;124&#34;],[&#34;kwyatt23&#34;,&#34;kowyatt&#34;,&#34;TheBaconDiaries&#34;,&#34;acornsandnuts&#34;,&#34;RealMaggieJones&#34;,&#34;benkittelson56&#34;,&#34;JBStephens1&#34;,&#34;Josh_Edwards11&#34;,&#34;kimstric&#34;,&#34;77ccampbell&#34;,&#34;BarkmanSusan&#34;,&#34;libraryhillary&#34;,&#34;BabitsKnopeful&#34;,&#34;novalsi&#34;,&#34;JanesAlisha&#34;,&#34;ayshmonroe&#34;,&#34;ELGL50&#34;,&#34;Brandoncito27&#34;,&#34;InfoSysNic&#34;,&#34;MyPublicTweeter&#34;,&#34;SavageLaura&#34;,&#34;JenWCasey&#34;,&#34;marcemars&#34;,&#34;sarahemoss&#34;,&#34;brendanbabb&#34;,&#34;kittlent&#34;,&#34;patrickm02L&#34;,&#34;brent4cities&#34;,&#34;Joedoespolitics&#34;,&#34;BuckleyRae&#34;,&#34;danwein&#34;,&#34;matt_ygr&#34;,&#34;OD_Louise&#34;,&#34;NZRatkai&#34;,&#34;BloombergCities&#34;,&#34;btmurphy88&#34;,&#34;HannahROsborne&#34;,&#34;myfriendemily&#34;,&#34;ryanindurham&#34;,&#34;ShannonAClark8&#34;,&#34;1stLadyOfWater&#34;,&#34;anthonysanti&#34;,&#34;dinberga07&#34;,&#34;islandellis&#34;,&#34;Jinjiloo&#34;,&#34;JTGreiner&#34;,&#34;SarahKCMO&#34;,&#34;dlgoldberg&#34;,&#34;GovLovePodcast&#34;,&#34;MissEdwardsCLT&#34;,&#34;StephAWade&#34;,&#34;ZachNavin&#34;,&#34;Alma_LBC&#34;,&#34;AmandaDaflos&#34;,&#34;AquaTanner&#34;,&#34;darbomb_&#34;,&#34;eslangston&#34;,&#34;Greg_James_&#34;,&#34;lj_maze&#34;,&#34;nickintosh&#34;,&#34;nrc_inc&#34;,&#34;roger_keren&#34;,&#34;Shannon24404768&#34;,&#34;_ResourceX&#34;,&#34;Angelica_Online&#34;,&#34;AnniaAleman&#34;,&#34;assaffrances&#34;,&#34;CFEfund&#34;,&#34;dawnbvaughan&#34;,&#34;JasonReisdorfer&#34;,&#34;Kaci3785&#34;,&#34;KelseyN_Parker&#34;,&#34;larrymattsonian&#34;,&#34;ltayara1&#34;,&#34;marisskat&#34;,&#34;mattmckirahan&#34;,&#34;newbopke&#34;,&#34;Public_Input&#34;,&#34;rngrill&#34;,&#34;TheDavidFinley&#34;,&#34;Urbanagami&#34;,&#34;CarlyLorentz&#34;,&#34;clearpointstrat&#34;,&#34;dkleading&#34;,&#34;egibsonplan&#34;,&#34;ELGLSconnie&#34;,&#34;JennyLovsGov&#34;,&#34;KateBender5&#34;,&#34;MitchFosterMI&#34;,&#34;mskibbe&#34;,&#34;packpridejones&#34;,&#34;RachelLocke15&#34;,&#34;TheMarshMethod&#34;,&#34;viewpointcloud&#34;,&#34;aaronkfoley&#34;,&#34;APLiowa&#34;,&#34;Baltimoreiteam&#34;,&#34;BoriCubAna&#34;,&#34;CALELGL&#34;,&#34;DHedglin&#34;,&#34;emilyrfultz&#34;,&#34;FranciePalmer&#34;,&#34;ghostofliteracy&#34;,&#34;GMeadowCougar&#34;,&#34;jmintzCFE&#34;,&#34;KimShiggy&#34;,&#34;localgovlaura&#34;,&#34;luciddreamvr&#34;,&#34;mdhartleib&#34;,&#34;MegMcGurk&#34;,&#34;MichaelDwrites&#34;,&#34;MountainELGL&#34;,&#34;mysidewalkHQ&#34;,&#34;PatMadej&#34;,&#34;PaulaKwan&#34;,&#34;pbassi&#34;,&#34;Rachaelmarieb&#34;,&#34;RafaelBaptista5&#34;,&#34;RandomAndal&#34;,&#34;Sarasti&#34;,&#34;snapsbyc&#34;,&#34;TerranceDeShaun&#34;,&#34;TigardOR&#34;,&#34;TulsaTransport&#34;],[134,97,76,54,54,41,37,35,34,32,32,26,24,24,23,20,20,18,18,17,16,15,15,15,14,13,13,12,12,11,10,10,10,9,8,8,8,8,8,8,7,7,7,7,7,7,7,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]],&#34;container&#34;:&#34;&lt;table class=\&#34;display\&#34;&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Twitter ID&lt;\/th&gt;\n      &lt;th&gt;Tweet Count&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;&#34;,&#34;options&#34;:{&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:2},{&#34;orderable&#34;:false,&#34;targets&#34;:0}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;cheering-section&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Cheering Section&lt;/h1&gt;
+&lt;div id=&#34;most-retweets&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Most Retweets&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == TRUE) %&amp;gt;%
+  group_by(screen_name) %&amp;gt;%
+  summarise(tweets = n()) %&amp;gt;%
+  arrange(desc(tweets)) %&amp;gt;%
+  top_n(100, tweets) %&amp;gt;%
+  datatable(colnames = c(&amp;quot;Twitter ID&amp;quot;, &amp;quot;Retweet Count&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-2&#34; style=&#34;width:100%;height:auto;&#34; class=&#34;datatables html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-2&#34;&gt;{&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;,&#34;14&#34;,&#34;15&#34;,&#34;16&#34;,&#34;17&#34;,&#34;18&#34;,&#34;19&#34;,&#34;20&#34;,&#34;21&#34;,&#34;22&#34;,&#34;23&#34;,&#34;24&#34;,&#34;25&#34;,&#34;26&#34;,&#34;27&#34;,&#34;28&#34;,&#34;29&#34;,&#34;30&#34;,&#34;31&#34;,&#34;32&#34;,&#34;33&#34;,&#34;34&#34;,&#34;35&#34;,&#34;36&#34;,&#34;37&#34;,&#34;38&#34;,&#34;39&#34;,&#34;40&#34;,&#34;41&#34;,&#34;42&#34;,&#34;43&#34;,&#34;44&#34;,&#34;45&#34;,&#34;46&#34;,&#34;47&#34;,&#34;48&#34;,&#34;49&#34;,&#34;50&#34;,&#34;51&#34;,&#34;52&#34;,&#34;53&#34;,&#34;54&#34;,&#34;55&#34;,&#34;56&#34;,&#34;57&#34;,&#34;58&#34;,&#34;59&#34;,&#34;60&#34;,&#34;61&#34;,&#34;62&#34;,&#34;63&#34;,&#34;64&#34;,&#34;65&#34;,&#34;66&#34;,&#34;67&#34;,&#34;68&#34;,&#34;69&#34;,&#34;70&#34;,&#34;71&#34;,&#34;72&#34;,&#34;73&#34;,&#34;74&#34;,&#34;75&#34;,&#34;76&#34;,&#34;77&#34;,&#34;78&#34;,&#34;79&#34;,&#34;80&#34;,&#34;81&#34;,&#34;82&#34;,&#34;83&#34;,&#34;84&#34;,&#34;85&#34;,&#34;86&#34;,&#34;87&#34;,&#34;88&#34;,&#34;89&#34;,&#34;90&#34;,&#34;91&#34;,&#34;92&#34;,&#34;93&#34;,&#34;94&#34;,&#34;95&#34;,&#34;96&#34;,&#34;97&#34;,&#34;98&#34;,&#34;99&#34;,&#34;100&#34;,&#34;101&#34;,&#34;102&#34;],[&#34;ELGL50&#34;,&#34;SEELGL&#34;,&#34;77ccampbell&#34;,&#34;MountainELGL&#34;,&#34;NWELGL&#34;,&#34;kowyatt&#34;,&#34;danwein&#34;,&#34;acornsandnuts&#34;,&#34;CALELGL&#34;,&#34;SWELGL&#34;,&#34;MidwestELGL&#34;,&#34;JBStephens1&#34;,&#34;NEELGL&#34;,&#34;benkittelson56&#34;,&#34;ELGLJobs&#34;,&#34;GovLovePodcast&#34;,&#34;ELGLSconnie&#34;,&#34;BarkmanSusan&#34;,&#34;OhioELGL&#34;,&#34;_ResourceX&#34;,&#34;Angelica_Online&#34;,&#34;libraryhillary&#34;,&#34;RealMaggieJones&#34;,&#34;dinberga07&#34;,&#34;kimstric&#34;,&#34;SavageLaura&#34;,&#34;marisskat&#34;,&#34;CityHallSelfie&#34;,&#34;enfabian&#34;,&#34;kwyatt23&#34;,&#34;MitchFosterMI&#34;,&#34;novalsi&#34;,&#34;AquaTanner&#34;,&#34;ChuckManningSr1&#34;,&#34;InfoSysNic&#34;,&#34;Josh_Edwards11&#34;,&#34;nrc_inc&#34;,&#34;CFEfund&#34;,&#34;chrisfabianPBB&#34;,&#34;sarahemoss&#34;,&#34;Alma_LBC&#34;,&#34;BloombergCities&#34;,&#34;MichaelDwrites&#34;,&#34;brendanbabb&#34;,&#34;egibsonplan&#34;,&#34;matt_ygr&#34;,&#34;MyPublicTweeter&#34;,&#34;OD_Louise&#34;,&#34;TheBaconDiaries&#34;,&#34;aLocalNow&#34;,&#34;DamemaMann&#34;,&#34;hanaschank&#34;,&#34;HannahROsborne&#34;,&#34;StephAWade&#34;,&#34;1stLadyOfWater&#34;,&#34;AmandaDaflos&#34;,&#34;dawnbvaughan&#34;,&#34;PaulaKwan&#34;,&#34;TheMarshMethod&#34;,&#34;anthonysanti&#34;,&#34;JenWCasey&#34;,&#34;JRTowery&#34;,&#34;KelseyN_Parker&#34;,&#34;rolandpersaud&#34;,&#34;SmartCitiesFeed&#34;,&#34;ayshmonroe&#34;,&#34;brent4cities&#34;,&#34;Joedoespolitics&#34;,&#34;kjappel&#34;,&#34;MegMcGurk&#34;,&#34;MissEdwardsCLT&#34;,&#34;myfriendemily&#34;,&#34;CallunaAilish&#34;,&#34;CroskeyChaparro&#34;,&#34;emilyrfultz&#34;,&#34;Greg_James_&#34;,&#34;JenDellaValle&#34;,&#34;larrymattsonian&#34;,&#34;mskibbe&#34;,&#34;patrickm02L&#34;,&#34;PaulTheUrbanist&#34;,&#34;aaronkfoley&#34;,&#34;AndyKuhn740&#34;,&#34;AnniaAleman&#34;,&#34;btmurphy88&#34;,&#34;clearpointstrat&#34;,&#34;CommDevSoc&#34;,&#34;islandellis&#34;,&#34;JasonReisdorfer&#34;,&#34;JTGreiner&#34;,&#34;KatieVPoulsen&#34;,&#34;KimShiggy&#34;,&#34;LAinnovates&#34;,&#34;lightifyco1&#34;,&#34;loribush&#34;,&#34;MadisonThesing&#34;,&#34;packpridejones&#34;,&#34;PatMadej&#34;,&#34;Public_Input&#34;,&#34;Shannon24404768&#34;,&#34;TigardOR&#34;,&#34;TJCOGnc&#34;],[243,125,75,67,58,56,51,45,38,37,36,34,33,32,32,32,31,30,29,27,27,26,24,18,18,18,17,16,16,16,16,16,12,12,11,11,11,10,10,10,9,9,9,8,8,8,8,8,8,7,7,7,7,7,6,6,6,6,6,5,5,5,5,5,5,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]],&#34;container&#34;:&#34;&lt;table class=\&#34;display\&#34;&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Twitter ID&lt;\/th&gt;\n      &lt;th&gt;Retweet Count&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;&#34;,&#34;options&#34;:{&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:2},{&#34;orderable&#34;:false,&#34;targets&#34;:0}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;enough-already&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Enough Already!&lt;/h1&gt;
+&lt;div id=&#34;top-average-tweet-length&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Top Average Tweet Length&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == FALSE) %&amp;gt;%
+  group_by(screen_name) %&amp;gt;%
+  summarise(avg_length = mean(display_text_width)) %&amp;gt;%
+  top_n(15, avg_length) %&amp;gt;%
+  ggplot(aes(reorder(screen_name, avg_length), avg_length)) +
+  geom_col(fill = &amp;quot;#0095A8&amp;quot;) +
+  coord_flip() +
+  labs(title = &amp;quot;Average Tweet Length&amp;quot;,
+       subtitle = &amp;quot;Top 15&amp;quot;,
+       caption = &amp;quot;Author: Jason Jones, @packpridejones&amp;quot;,
+       x = NULL, y = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.x = element_line(color = &amp;quot;light grey&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-05-24-elgl-twitter_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;short-and-sweet&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Short and Sweet&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == FALSE) %&amp;gt;%
+  group_by(screen_name) %&amp;gt;%
+  summarise(avg_length = mean(display_text_width)) %&amp;gt;%
+  top_n(-15, avg_length) %&amp;gt;%
+  ggplot(aes(reorder(screen_name, desc(avg_length)), avg_length)) +
+  geom_col(fill = &amp;quot;#0095A8&amp;quot;) +
+  coord_flip() +
+  labs(title = &amp;quot;Average Tweet Length&amp;quot;,
+       subtitle = &amp;quot;Lowest 15&amp;quot;,
+       caption = &amp;quot;Author: Jason Jones, @packpridejones&amp;quot;,
+       x = NULL, y = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.x = element_line(color = &amp;quot;light grey&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-05-24-elgl-twitter_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;popular-kids&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Popular Kids&lt;/h1&gt;
+&lt;div id=&#34;who-gets-the-most-replies&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Who gets the most replies?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is.na(reply_to_screen_name) != TRUE) %&amp;gt;%
+  group_by(reply_to_screen_name) %&amp;gt;%
+  summarise(tweets = n()) %&amp;gt;%
+  arrange(desc(tweets)) %&amp;gt;%
+  top_n(100, tweets) %&amp;gt;%
+  datatable(colnames = c(&amp;quot;Twitter ID&amp;quot;, &amp;quot;Reply Count&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-3&#34; style=&#34;width:100%;height:auto;&#34; class=&#34;datatables html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-3&#34;&gt;{&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;,&#34;14&#34;,&#34;15&#34;,&#34;16&#34;,&#34;17&#34;,&#34;18&#34;,&#34;19&#34;,&#34;20&#34;,&#34;21&#34;,&#34;22&#34;,&#34;23&#34;,&#34;24&#34;,&#34;25&#34;,&#34;26&#34;,&#34;27&#34;,&#34;28&#34;,&#34;29&#34;,&#34;30&#34;,&#34;31&#34;,&#34;32&#34;,&#34;33&#34;,&#34;34&#34;,&#34;35&#34;,&#34;36&#34;,&#34;37&#34;,&#34;38&#34;,&#34;39&#34;,&#34;40&#34;,&#34;41&#34;,&#34;42&#34;,&#34;43&#34;,&#34;44&#34;,&#34;45&#34;,&#34;46&#34;,&#34;47&#34;,&#34;48&#34;,&#34;49&#34;,&#34;50&#34;,&#34;51&#34;,&#34;52&#34;,&#34;53&#34;,&#34;54&#34;,&#34;55&#34;,&#34;56&#34;,&#34;57&#34;,&#34;58&#34;,&#34;59&#34;,&#34;60&#34;,&#34;61&#34;,&#34;62&#34;,&#34;63&#34;,&#34;64&#34;,&#34;65&#34;,&#34;66&#34;,&#34;67&#34;,&#34;68&#34;,&#34;69&#34;,&#34;70&#34;,&#34;71&#34;,&#34;72&#34;,&#34;73&#34;,&#34;74&#34;,&#34;75&#34;,&#34;76&#34;,&#34;77&#34;,&#34;78&#34;,&#34;79&#34;,&#34;80&#34;,&#34;81&#34;,&#34;82&#34;,&#34;83&#34;,&#34;84&#34;,&#34;85&#34;,&#34;86&#34;,&#34;87&#34;,&#34;88&#34;,&#34;89&#34;,&#34;90&#34;,&#34;91&#34;,&#34;92&#34;],[&#34;kwyatt23&#34;,&#34;Josh_Edwards11&#34;,&#34;acornsandnuts&#34;,&#34;TheBaconDiaries&#34;,&#34;BarkmanSusan&#34;,&#34;kowyatt&#34;,&#34;novalsi&#34;,&#34;marcemars&#34;,&#34;benkittelson56&#34;,&#34;ELGL50&#34;,&#34;hanaschank&#34;,&#34;libraryhillary&#34;,&#34;1stLadyOfWater&#34;,&#34;BabitsKnopeful&#34;,&#34;CityofDurhamNC&#34;,&#34;patrickm02L&#34;,&#34;RealMaggieJones&#34;,&#34;ayshmonroe&#34;,&#34;brent4cities&#34;,&#34;dawnbvaughan&#34;,&#34;eslangston&#34;,&#34;KendraHwa&#34;,&#34;matt_ygr&#34;,&#34;mskibbe&#34;,&#34;SavageLaura&#34;,&#34;SteveCallaway2&#34;,&#34;77ccampbell&#34;,&#34;Alma_LBC&#34;,&#34;brendanbabb&#34;,&#34;CarlyLorentz&#34;,&#34;dinberga07&#34;,&#34;DKTangeman&#34;,&#34;emilymedmonds&#34;,&#34;HannahLebovits&#34;,&#34;Joedoespolitics&#34;,&#34;KelseyN_Parker&#34;,&#34;myfriendemily&#34;,&#34;NZRatkai&#34;,&#34;packpridejones&#34;,&#34;PatMadej&#34;,&#34;sarahemoss&#34;,&#34;stevefordurham&#34;,&#34;TheMarshMethod&#34;,&#34;ZachNavin&#34;,&#34;2arinkorpool&#34;,&#34;aaronkfoley&#34;,&#34;AdriaF&#34;,&#34;AmandaDaflos&#34;,&#34;Angelica_Online&#34;,&#34;AnniaAleman&#34;,&#34;assaffrances&#34;,&#34;BloombergCities&#34;,&#34;cassiejoaz&#34;,&#34;CityofDetroit&#34;,&#34;CtrPubSafExc&#34;,&#34;DarGreen91&#34;,&#34;Durham_iteam&#34;,&#34;DurhamCounty&#34;,&#34;dwohlbs&#34;,&#34;emergingissues&#34;,&#34;GMeadowCougar&#34;,&#34;GovLovePodcast&#34;,&#34;hazelsarahmarie&#34;,&#34;IGotCharts&#34;,&#34;Indy_CIO&#34;,&#34;JasonReisdorfer&#34;,&#34;JBStephens1&#34;,&#34;JenWCasey&#34;,&#34;JRTowery&#34;,&#34;Kaci3785&#34;,&#34;katequeram&#34;,&#34;kim_hodo&#34;,&#34;laceybeaty&#34;,&#34;LibbyBretthauer&#34;,&#34;lydialavelle&#34;,&#34;MadisonThesing&#34;,&#34;nickintosh&#34;,&#34;nrc_inc&#34;,&#34;PaulaKwan&#34;,&#34;Public_Input&#34;,&#34;RafaelBaptista5&#34;,&#34;rngrill&#34;,&#34;RobSturns&#34;,&#34;roger_keren&#34;,&#34;samedelstein&#34;,&#34;SarahKCMO&#34;,&#34;sereniah&#34;,&#34;snapsbyc&#34;,&#34;sog_ced&#34;,&#34;terrycyates&#34;,&#34;TheHoboBoss&#34;,&#34;Urbanagami&#34;],[21,18,17,13,12,11,8,7,6,6,6,6,5,5,4,4,4,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],&#34;container&#34;:&#34;&lt;table class=\&#34;display\&#34;&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Twitter ID&lt;\/th&gt;\n      &lt;th&gt;Reply Count&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;&#34;,&#34;options&#34;:{&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:2},{&#34;orderable&#34;:false,&#34;targets&#34;:0}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;iphone-or-android&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;iPhone or Android?&lt;/h1&gt;
+&lt;div id=&#34;twitter-tool-of-choice&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Twitter tool of choice&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(is_retweet == FALSE) %&amp;gt;%
+  group_by(source) %&amp;gt;%
+  summarise(Count = n()) %&amp;gt;%
+  arrange(desc(Count)) %&amp;gt;%
+  top_n(100, Count) %&amp;gt;%
+  datatable()&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-4&#34; style=&#34;width:100%;height:auto;&#34; class=&#34;datatables html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-4&#34;&gt;{&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;],[&#34;Twitter for iPhone&#34;,&#34;Twitter for Android&#34;,&#34;Twitter Web Client&#34;,&#34;Twitter Web App&#34;,&#34;Twitter for iPad&#34;,&#34;Instagram&#34;,&#34;HubSpot&#34;,&#34;IFTTT&#34;,&#34;LinkedIn&#34;,&#34;Sprout Social&#34;,&#34;Hootsuite Inc.&#34;,&#34;NLP Testing Bott&#34;,&#34;TweetDeck&#34;],[866,353,99,71,12,7,4,2,2,2,1,1,1]],&#34;container&#34;:&#34;&lt;table class=\&#34;display\&#34;&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;source&lt;\/th&gt;\n      &lt;th&gt;Count&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;&#34;,&#34;options&#34;:{&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:2},{&#34;orderable&#34;:false,&#34;targets&#34;:0}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;stealing-thunder&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Stealing Thunder?&lt;/h1&gt;
+&lt;div id=&#34;retweet-has-more-favorites-than-original-tweet&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Retweet has more favorites than original tweet&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(favorite_count &amp;lt; retweet_favorite_count) %&amp;gt;%
+  group_by(screen_name) %&amp;gt;%
+  summarise(thunder_stolen = n()) %&amp;gt;%
+  arrange(desc(thunder_stolen)) %&amp;gt;%
+  top_n(100, thunder_stolen) %&amp;gt;%
+  datatable(colnames = c(&amp;quot;Screen Name&amp;quot;, &amp;quot;Count Of Thunder Steals&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;htmlwidget-5&#34; style=&#34;width:100%;height:auto;&#34; class=&#34;datatables html-widget&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;application/json&#34; data-for=&#34;htmlwidget-5&#34;&gt;{&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;,&#34;14&#34;,&#34;15&#34;,&#34;16&#34;,&#34;17&#34;,&#34;18&#34;,&#34;19&#34;,&#34;20&#34;,&#34;21&#34;,&#34;22&#34;,&#34;23&#34;,&#34;24&#34;,&#34;25&#34;,&#34;26&#34;,&#34;27&#34;,&#34;28&#34;,&#34;29&#34;,&#34;30&#34;,&#34;31&#34;,&#34;32&#34;,&#34;33&#34;,&#34;34&#34;,&#34;35&#34;,&#34;36&#34;,&#34;37&#34;,&#34;38&#34;,&#34;39&#34;,&#34;40&#34;,&#34;41&#34;,&#34;42&#34;,&#34;43&#34;,&#34;44&#34;,&#34;45&#34;,&#34;46&#34;,&#34;47&#34;,&#34;48&#34;,&#34;49&#34;,&#34;50&#34;,&#34;51&#34;,&#34;52&#34;,&#34;53&#34;,&#34;54&#34;,&#34;55&#34;,&#34;56&#34;,&#34;57&#34;,&#34;58&#34;,&#34;59&#34;,&#34;60&#34;,&#34;61&#34;,&#34;62&#34;,&#34;63&#34;,&#34;64&#34;,&#34;65&#34;,&#34;66&#34;,&#34;67&#34;,&#34;68&#34;,&#34;69&#34;,&#34;70&#34;,&#34;71&#34;,&#34;72&#34;,&#34;73&#34;,&#34;74&#34;,&#34;75&#34;,&#34;76&#34;,&#34;77&#34;,&#34;78&#34;,&#34;79&#34;,&#34;80&#34;,&#34;81&#34;,&#34;82&#34;,&#34;83&#34;,&#34;84&#34;,&#34;85&#34;,&#34;86&#34;,&#34;87&#34;,&#34;88&#34;,&#34;89&#34;,&#34;90&#34;,&#34;91&#34;,&#34;92&#34;,&#34;93&#34;,&#34;94&#34;,&#34;95&#34;,&#34;96&#34;,&#34;97&#34;,&#34;98&#34;,&#34;99&#34;,&#34;100&#34;,&#34;101&#34;,&#34;102&#34;],[&#34;ELGL50&#34;,&#34;SEELGL&#34;,&#34;77ccampbell&#34;,&#34;MountainELGL&#34;,&#34;NWELGL&#34;,&#34;kowyatt&#34;,&#34;danwein&#34;,&#34;acornsandnuts&#34;,&#34;CALELGL&#34;,&#34;MidwestELGL&#34;,&#34;JBStephens1&#34;,&#34;SWELGL&#34;,&#34;NEELGL&#34;,&#34;benkittelson56&#34;,&#34;ELGLJobs&#34;,&#34;ELGLSconnie&#34;,&#34;GovLovePodcast&#34;,&#34;BarkmanSusan&#34;,&#34;OhioELGL&#34;,&#34;_ResourceX&#34;,&#34;Angelica_Online&#34;,&#34;libraryhillary&#34;,&#34;RealMaggieJones&#34;,&#34;dinberga07&#34;,&#34;kimstric&#34;,&#34;SavageLaura&#34;,&#34;marisskat&#34;,&#34;CityHallSelfie&#34;,&#34;enfabian&#34;,&#34;kwyatt23&#34;,&#34;MitchFosterMI&#34;,&#34;novalsi&#34;,&#34;AquaTanner&#34;,&#34;ChuckManningSr1&#34;,&#34;InfoSysNic&#34;,&#34;Josh_Edwards11&#34;,&#34;nrc_inc&#34;,&#34;chrisfabianPBB&#34;,&#34;sarahemoss&#34;,&#34;Alma_LBC&#34;,&#34;BloombergCities&#34;,&#34;MichaelDwrites&#34;,&#34;brendanbabb&#34;,&#34;CFEfund&#34;,&#34;egibsonplan&#34;,&#34;matt_ygr&#34;,&#34;MyPublicTweeter&#34;,&#34;OD_Louise&#34;,&#34;TheBaconDiaries&#34;,&#34;aLocalNow&#34;,&#34;DamemaMann&#34;,&#34;hanaschank&#34;,&#34;HannahROsborne&#34;,&#34;StephAWade&#34;,&#34;1stLadyOfWater&#34;,&#34;AmandaDaflos&#34;,&#34;PaulaKwan&#34;,&#34;TheMarshMethod&#34;,&#34;anthonysanti&#34;,&#34;dawnbvaughan&#34;,&#34;JenWCasey&#34;,&#34;JRTowery&#34;,&#34;KelseyN_Parker&#34;,&#34;rolandpersaud&#34;,&#34;SmartCitiesFeed&#34;,&#34;ayshmonroe&#34;,&#34;brent4cities&#34;,&#34;Joedoespolitics&#34;,&#34;kjappel&#34;,&#34;MegMcGurk&#34;,&#34;MissEdwardsCLT&#34;,&#34;myfriendemily&#34;,&#34;CallunaAilish&#34;,&#34;CroskeyChaparro&#34;,&#34;emilyrfultz&#34;,&#34;Greg_James_&#34;,&#34;JenDellaValle&#34;,&#34;larrymattsonian&#34;,&#34;mskibbe&#34;,&#34;patrickm02L&#34;,&#34;PaulTheUrbanist&#34;,&#34;aaronkfoley&#34;,&#34;AndyKuhn740&#34;,&#34;AnniaAleman&#34;,&#34;btmurphy88&#34;,&#34;clearpointstrat&#34;,&#34;CommDevSoc&#34;,&#34;islandellis&#34;,&#34;JasonReisdorfer&#34;,&#34;JTGreiner&#34;,&#34;KatieVPoulsen&#34;,&#34;KimShiggy&#34;,&#34;LAinnovates&#34;,&#34;lightifyco1&#34;,&#34;loribush&#34;,&#34;MadisonThesing&#34;,&#34;packpridejones&#34;,&#34;PatMadej&#34;,&#34;Public_Input&#34;,&#34;Shannon24404768&#34;,&#34;TigardOR&#34;,&#34;TJCOGnc&#34;],[238,121,75,65,57,56,51,45,37,36,34,34,33,31,31,31,31,30,29,27,27,25,24,18,18,18,17,16,16,16,16,16,12,12,11,11,11,10,10,9,9,9,8,8,8,8,8,8,8,7,7,7,7,7,6,6,6,6,5,5,5,5,5,5,5,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]],&#34;container&#34;:&#34;&lt;table class=\&#34;display\&#34;&gt;\n  &lt;thead&gt;\n    &lt;tr&gt;\n      &lt;th&gt; &lt;\/th&gt;\n      &lt;th&gt;Screen Name&lt;\/th&gt;\n      &lt;th&gt;Count Of Thunder Steals&lt;\/th&gt;\n    &lt;\/tr&gt;\n  &lt;\/thead&gt;\n&lt;\/table&gt;&#34;,&#34;options&#34;:{&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:2},{&#34;orderable&#34;:false,&#34;targets&#34;:0}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}&lt;/script&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;language-is-important&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Language Is Important&lt;/h1&gt;
+&lt;div id=&#34;scoring-tweets-by-language-sentiment&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Scoring Tweets by Language Sentiment&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tweets %&amp;gt;%
+  filter(created_at &amp;gt; as.POSIXct(&amp;quot;2019-05-15 23:59:59&amp;quot;)) %&amp;gt;%
+  mutate(index = row_number()) %&amp;gt;%
+  unnest_tokens(&amp;quot;word&amp;quot;, text) %&amp;gt;%
+  select(index, created_at, screen_name, word) %&amp;gt;%
+  anti_join(stop_words) %&amp;gt;%
+  mutate(created_at = floor_date(created_at, unit = &amp;quot;hour&amp;quot;)) %&amp;gt;%
+  mutate(created_at = f(created_at)) %&amp;gt;%
+  inner_join(get_sentiments(lexicon = &amp;quot;afinn&amp;quot;)) %&amp;gt;%
+  group_by(created_at) %&amp;gt;%
+  summarise(score = sum(score)) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  arrange(created_at) %&amp;gt;%
+  mutate(sent_flow = cumsum(score)) %&amp;gt;%
+  ggplot(aes(created_at, sent_flow)) +
+  geom_line() +
+  geom_point(color = &amp;quot;#FF7043&amp;quot;, size = 3) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(title = &amp;quot;#ELGL19: Twitter Cumulative Sentiment&amp;quot;,
+       subtitle = &amp;quot;Y&amp;#39;all Some Positive People!&amp;quot;,
+       caption = &amp;quot;Author: Jason Jones, @packpridejones&amp;quot;,
+       x = NULL, y = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = &amp;quot;light grey&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-05-24-elgl-twitter_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;most-used-words&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Most Used Words&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sentiment &amp;lt;- tweets %&amp;gt;%
+  filter(created_at &amp;gt; as.POSIXct(&amp;quot;2019-05-15 23:59:59&amp;quot;)) %&amp;gt;%
+  mutate(index = row_number()) %&amp;gt;%
+  unnest_tokens(&amp;quot;word&amp;quot;, text) %&amp;gt;%
+  select(index, created_at, screen_name, word) %&amp;gt;%
+  anti_join(stop_words) %&amp;gt;%
+  mutate(created_at = floor_date(created_at, unit = &amp;quot;hour&amp;quot;)) %&amp;gt;%
+  mutate(created_at = f(created_at)) %&amp;gt;%
+  inner_join(get_sentiments(lexicon = &amp;quot;bing&amp;quot;)) %&amp;gt;%
+  group_by(word) %&amp;gt;%
+  summarise(word_count = n()) %&amp;gt;%
+  ungroup()
+
+wordcloud::wordcloud(sentiment$word, sentiment$word_count, colors = c(&amp;quot;#0095A8&amp;quot;,
+                                                                      &amp;quot;#112E51&amp;quot;,
+                                                                      &amp;quot;#FF7043&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-05-24-elgl-twitter_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;960&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;want-to-play-with-the-data-too&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Want To Play With The Data Too?&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/jasonajones73/elgl19-twitter/master/data/tweets.csv&#34;&gt;Tweet Data CSV&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/jasonajones73/elgl19-twitter/master/data/tweets.json&#34;&gt;Tweet Data JSON&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jasonajones73/elgl19-twitter/blob/master/data/tweets.rds?raw=true&#34;&gt;Tweet Data RDS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>I Like It When You Call Me Large SpatialPolygonsDataFrame</title>
@@ -1235,13 +1504,13 @@ $$&lt;/p&gt;
 &lt;p&gt;Press &lt;code&gt;Space&lt;/code&gt; to play!&lt;/p&gt;
 
 &lt;p&gt;&lt;span class=&#34;fragment &#34; &gt;
-  One
+   One
 &lt;/span&gt;
 &lt;span class=&#34;fragment &#34; &gt;
-  &lt;strong&gt;Two&lt;/strong&gt;
+   &lt;strong&gt;Two&lt;/strong&gt;
 &lt;/span&gt;
 &lt;span class=&#34;fragment &#34; &gt;
-  Three
+   Three
 &lt;/span&gt;&lt;/p&gt;
 
 &lt;hr /&gt;
@@ -1272,7 +1541,6 @@ $$&lt;/p&gt;
 &lt;li&gt;Only the speaker can read these notes&lt;/li&gt;
 &lt;li&gt;Press &lt;code&gt;S&lt;/code&gt; key to view&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;/aside&gt;
 
 &lt;hr /&gt;

@@ -13,6 +13,16 @@
     
     
     <item>
+      <title>#ELGL19 On Twitter: A Brief Synthesis</title>
+      <link>/post/2019-05-24-elgl-twitter/</link>
+      <pubDate>Fri, 24 May 2019 21:13:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-24-elgl-twitter/</guid>
+      <description>The Boring Bits - Hidden But Viewablelibrary(tidyverse)library(lubridate)library(tidytext)library(DT)tweets &amp;lt;- read_rds(&amp;quot;data/tweets.rds&amp;quot;) %&amp;gt;%as_tibble()f &amp;lt;- function(time) {x &amp;lt;- timehour(x) &amp;lt;- hour(x)-4return(x)}
+24 Hours of Tweetstweets %&amp;gt;%filter(is_retweet == FALSE) %&amp;gt;%mutate(created_at = floor_date(created_at, unit = &amp;quot;hour&amp;quot;)) %&amp;gt;%mutate(created_at = f(created_at)) %&amp;gt;%group_by(created_at) %&amp;gt;%summarise(tweet_count = n()) %&amp;gt;%ungroup() %&amp;gt;%arrange(created_at) %&amp;gt;%mutate(running_total = cumsum(tweet_count)) %&amp;gt;%top_n(24, running_total) %&amp;gt;%ggplot(aes(created_at, running_total)) +geom_col(fill = &amp;quot;#112E51&amp;quot;) +geom_label(aes(label = scales::comma(running_total)), nudge_y = -50, size = 2) +scale_y_continuous(labels = scales::comma_format()) +labs(title = &amp;quot;New Tweets: #ELGL19&amp;quot;,caption = &amp;quot;Author: Jason Jones, @packpridejones&amp;quot;,x = NULL, y = NULL) +theme(panel.</description>
+    </item>
+    
+    <item>
       <title>I Like It When You Call Me Large SpatialPolygonsDataFrame</title>
       <link>/post/2019-03-18-elon-geospatial/</link>
       <pubDate>Tue, 19 Mar 2019 21:09:00 +0000</pubDate>

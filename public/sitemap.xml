@@ -1,5 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+    
+    <url>
+    
+      <loc>/post/2019-05-24-elgl-twitter/</loc>
+      <lastmod>2019-05-24T21:13:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/</loc>
+      <lastmod>2019-05-24T21:13:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
   
     
     <url>
@@ -28,8 +44,62 @@
     
     <url>
     
+      <loc>/categories/</loc>
+      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/2018-09-02-reproducible-research/</loc>
       <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/categories/r/</loc>
+      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/r-markdown/</loc>
+      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/</loc>
+      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/analysis/</loc>
+      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/reproducible/</loc>
+      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
+      <priority>0</priority>
     </url>
     
   
@@ -52,6 +122,24 @@
     
     <url>
     
+      <loc>/tags/data/</loc>
+      <lastmod>2018-06-01T00:00:00-04:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/open-data/</loc>
+      <lastmod>2018-06-01T00:00:00-04:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/post/2018-04-29-raleigh-sentiment/</loc>
       <lastmod>2018-04-29T21:09:00+00:00</lastmod>
     </url>
@@ -60,8 +148,53 @@
     
     <url>
     
+      <loc>/tags/budget/</loc>
+      <lastmod>2018-04-29T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/sentiment/</loc>
+      <lastmod>2018-04-29T21:09:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/publication_types/4/</loc>
+      <lastmod>2018-01-09T00:00:00-05:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/tags/elgl/</loc>
+      <lastmod>2018-01-09T00:00:00-05:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    <url>
+    
       <loc>/publication/i-have-to-ask-you/</loc>
       <lastmod>2018-01-09T00:00:00-05:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/publication_types/</loc>
+      <lastmod>2018-01-09T00:00:00-05:00</lastmod>
+      <priority>0</priority>
     </url>
     
   
@@ -92,39 +225,6 @@
     
     <url>
     
-      <loc>/project/external-project/</loc>
-      <lastmod>2016-04-27T00:00:00-04:00</lastmod>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/project/internal-project/</loc>
-      <lastmod>2016-04-27T00:00:00-04:00</lastmod>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/publication_types/4/</loc>
-      <lastmod>2018-01-09T00:00:00-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
       <loc>/tags/deep-learning/</loc>
       <lastmod>2016-04-27T00:00:00-04:00</lastmod>
       <priority>0</priority>
@@ -143,18 +243,16 @@
     
     <url>
     
-      <loc>/tags/elgl/</loc>
-      <lastmod>2018-01-09T00:00:00-05:00</lastmod>
-      <priority>0</priority>
+      <loc>/project/external-project/</loc>
+      <lastmod>2016-04-27T00:00:00-04:00</lastmod>
     </url>
     
   
     
     <url>
     
-      <loc>/</loc>
-      <lastmod>2017-10-15T00:00:00-04:00</lastmod>
-      <priority>0</priority>
+      <loc>/project/internal-project/</loc>
+      <lastmod>2016-04-27T00:00:00-04:00</lastmod>
     </url>
     
   
@@ -163,33 +261,6 @@
     
       <loc>/project/</loc>
       <lastmod>2016-04-27T00:00:00-04:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/publication_types/</loc>
-      <lastmod>2018-01-09T00:00:00-05:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/categories/r/</loc>
-      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/r-markdown/</loc>
-      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -206,69 +277,6 @@
     <url>
     
       <loc>/slides/example-slides/</loc>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/</loc>
-      <lastmod>2016-04-27T00:00:00-04:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/analysis/</loc>
-      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/budget/</loc>
-      <lastmod>2018-04-29T21:09:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/data/</loc>
-      <lastmod>2018-06-01T00:00:00-04:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/open-data/</loc>
-      <lastmod>2018-06-01T00:00:00-04:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/reproducible/</loc>
-      <lastmod>2018-09-02T21:09:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    <url>
-    
-      <loc>/tags/sentiment/</loc>
-      <lastmod>2018-04-29T21:09:00+00:00</lastmod>
-      <priority>0</priority>
     </url>
     
   
