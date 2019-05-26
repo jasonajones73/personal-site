@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.align = 'center', warning
 library(tidyverse)
 library(lubridate)
 library(tidytext)
-library(DT)
+library(kableExtra)
 
 tweets <- read_rds("data/tweets.rds") %>%
   as_tibble()
@@ -91,8 +91,9 @@ tweets %>%
   group_by(screen_name) %>%
   summarise(tweets = n()) %>%
   arrange(desc(tweets)) %>%
-  top_n(100, tweets) %>%
-  datatable(colnames = c("Twitter ID", "Tweet Count"))
+  top_n(10, tweets) %>%
+  kable(col.names = c("Twitter ID", "Tweet Count")) %>%
+  kable_styling()
 ```
 
 <br>
@@ -105,8 +106,9 @@ tweets %>%
   group_by(screen_name) %>%
   summarise(tweets = n()) %>%
   arrange(desc(tweets)) %>%
-  top_n(100, tweets) %>%
-  datatable(colnames = c("Twitter ID", "Retweet Count"))
+  top_n(10, tweets) %>%
+  kable(col.names = c("Twitter ID", "Retweet Count")) %>%
+  kable_styling()
 ```
 
 <br>
@@ -160,8 +162,9 @@ tweets %>%
   group_by(reply_to_screen_name) %>%
   summarise(tweets = n()) %>%
   arrange(desc(tweets)) %>%
-  top_n(100, tweets) %>%
-  datatable(colnames = c("Twitter ID", "Reply Count"))
+  top_n(10, tweets) %>%
+  kable(col.names = c("Twitter ID", "Reply Count")) %>%
+  kable_styling()
 ```
 
 <br>
@@ -174,8 +177,9 @@ tweets %>%
   group_by(source) %>%
   summarise(Count = n()) %>%
   arrange(desc(Count)) %>%
-  top_n(100, Count) %>%
-  datatable()
+  top_n(10, Count) %>%
+  kable() %>%
+  kable_styling()
 ```
 
 <br>
@@ -188,8 +192,9 @@ tweets %>%
   group_by(screen_name) %>%
   summarise(thunder_stolen = n()) %>%
   arrange(desc(thunder_stolen)) %>%
-  top_n(100, thunder_stolen) %>%
-  datatable(colnames = c("Screen Name", "Count Of Thunder Steals"))
+  top_n(10, thunder_stolen) %>%
+  kable(col.names = c("Screen Name", "Count Of Thunder Steals")) %>%
+  kable_styling()
 ```
 
 <br>
