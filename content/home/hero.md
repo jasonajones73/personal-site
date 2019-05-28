@@ -13,7 +13,7 @@ weight = 10
 #   Deactivate an option by commenting out the line, prefixing it with `#`.
 [header]
   overlay_color = "#666"  # An HTML color value.
-  overlay_img = "headers/seattle.jpg"  # Image path relative to your `static/img/` folder.
+  overlay_img = "headers/bubbles-wide.jpg"  # Image path relative to your `static/img/` folder.
   overlay_filter = 0  # Darken the image. Value in range 0-1.
 
 # Call to action button (optional).
@@ -24,4 +24,4 @@ weight = 10
   label = '<i class="fas fa-chart-line"></i> Check out some posts!'
 +++
 
-I like coffee :coffee:, asking questions, and long walks!
+I like coffee :coffee:, solving problems, and answering questions!
