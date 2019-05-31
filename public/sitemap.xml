@@ -3,17 +3,25 @@
     
     <url>
     
-      <loc>/post/2019-05-24-elgl-twitter/</loc>
-      <lastmod>2019-05-24T21:13:00+00:00</lastmod>
+      <loc>/</loc>
+      <lastmod>2019-05-29T21:13:00+00:00</lastmod>
+      <priority>0</priority>
     </url>
     
   
     
     <url>
     
-      <loc>/</loc>
+      <loc>/post/2019-05-29-weather-data/</loc>
+      <lastmod>2019-05-29T21:13:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    <url>
+    
+      <loc>/post/2019-05-24-elgl-twitter/</loc>
       <lastmod>2019-05-24T21:13:00+00:00</lastmod>
-      <priority>0</priority>
     </url>
     
   

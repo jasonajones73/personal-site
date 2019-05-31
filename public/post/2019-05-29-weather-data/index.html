@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 3.0.0">
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta name="author" content="Jason Jones">
+
+  
+  
+  
+  
+    
+  
+  <meta name="description" content="The Boring Bits# Load packages ----library(tidyverse)library(tigris)library(sf)library(riem)library(kableExtra)
+Finding HomeLet’s start by grabbing the Chapel Hill boundary and then doing a test plot.
+# Retrieve Chapel Hill boundary ----chapel_hill &lt;- places(state = 37, year = 2017) %&gt;%st_as_sf() %&gt;%filter(NAME == &quot;Chapel Hill&quot;)
+chapel_hill %&gt;%ggplot() &#43;geom_sf(fill = NA, color = &quot;Red&quot;) &#43;theme(panel.background = element_blank())
+Weather StationsNow we need to grab all of the weather stations for NC and do another test plot to make sure everything is working.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/2019-05-29-weather-data/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" crossorigin="anonymous">
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="JASON JONES">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="JASON JONES">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/2019-05-29-weather-data/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@packpridejones">
+  <meta property="twitter:creator" content="@packpridejones">
+  
+  <meta property="og:site_name" content="JASON JONES">
+  <meta property="og:url" content="/post/2019-05-29-weather-data/">
+  <meta property="og:title" content="Weather Data | JASON JONES">
+  <meta property="og:description" content="The Boring Bits# Load packages ----library(tidyverse)library(tigris)library(sf)library(riem)library(kableExtra)
+Finding HomeLet’s start by grabbing the Chapel Hill boundary and then doing a test plot.
+# Retrieve Chapel Hill boundary ----chapel_hill &lt;- places(state = 37, year = 2017) %&gt;%st_as_sf() %&gt;%filter(NAME == &quot;Chapel Hill&quot;)
+chapel_hill %&gt;%ggplot() &#43;geom_sf(fill = NA, color = &quot;Red&quot;) &#43;theme(panel.background = element_blank())
+Weather StationsNow we need to grab all of the weather stations for NC and do another test plot to make sure everything is working.">
+  
+  
+    
+  <meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2019-05-29T21:13:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2019-05-29T21:13:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>Weather Data | JASON JONES</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">JASON JONES</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Weather Data</h1>
+
+  
+
+  
+    
+
+<div class="article-metadata">
+
+  
+  
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Jones">
+  </span>
+  
+
+  <span class="article-date">
+    
+    <meta content="2019-05-29 21:13:00 &#43;0000 &#43;0000" itemprop="datePublished">
+    <time datetime="2019-05-29 21:13:00 &#43;0000 &#43;0000" itemprop="dateModified">
+      May 29, 2019
+    </time>
+  </span>
+  <span itemscope itemprop="publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Jones">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Weather%20Data&amp;url=%2fpost%2f2019-05-29-weather-data%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2f2019-05-29-weather-data%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2f2019-05-29-weather-data%2f&amp;title=Weather%20Data"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2f2019-05-29-weather-data%2f&amp;title=Weather%20Data"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Weather%20Data&amp;body=%2fpost%2f2019-05-29-weather-data%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="the-boring-bits" class="section level1">
+<h1>The Boring Bits</h1>
+<pre class="r"><code># Load packages ----
+library(tidyverse)
+library(tigris)
+library(sf)
+library(riem)
+library(kableExtra)</code></pre>
+<p><br></p>
+</div>
+<div id="finding-home" class="section level1">
+<h1>Finding Home</h1>
+<p>Let’s start by grabbing the Chapel Hill boundary and then doing a test plot.</p>
+<pre class="r"><code># Retrieve Chapel Hill boundary ----
+chapel_hill &lt;- places(state = 37, year = 2017) %&gt;%
+  st_as_sf() %&gt;%
+  filter(NAME == &quot;Chapel Hill&quot;)</code></pre>
+<p><br></p>
+<pre class="r"><code>chapel_hill %&gt;%
+  ggplot() +
+  geom_sf(fill = NA, color = &quot;Red&quot;) +
+  theme(panel.background = element_blank())</code></pre>
+<p><img src="/post/2019-05-29-weather-data_files/figure-html/unnamed-chunk-3-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br></p>
+</div>
+<div id="weather-stations" class="section level1">
+<h1>Weather Stations</h1>
+<p>Now we need to grab all of the weather stations for NC and do another test plot to make sure everything is working. We should see a nice collection of dots that looks like North Carolina!</p>
+<pre class="r"><code># Retrieve weather stations ----
+stations &lt;- riem_stations(network = &quot;NC_ASOS&quot;) %&gt;%
+  st_as_sf(coords = c(&quot;lon&quot;, &quot;lat&quot;), crs = st_crs(chapel_hill))
+
+stations %&gt;%
+  ggplot() +
+  geom_sf() +
+  theme(panel.background = element_blank())</code></pre>
+<p><img src="/post/2019-05-29-weather-data_files/figure-html/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br></p>
+</div>
+<div id="subset-chapel-hill" class="section level1">
+<h1>Subset Chapel Hill</h1>
+<p>Getting fancy now! We will do some geoprocessing to select only the weather station(s) that fall within the Chapel Hill boundary we grabbed first. A test plot should confirm that this worked for us.</p>
+<pre class="r"><code># Select station in Chapel Hill ---
+selection &lt;- st_intersection(stations, chapel_hill)
+
+# Confirm location ----
+stations %&gt;%
+  filter(id == &quot;IGX&quot;) %&gt;%
+  ggplot() +
+  geom_sf(data = chapel_hill, fill = NA, color = &quot;Red&quot;) +
+  geom_sf() +
+  theme(panel.background = element_blank())</code></pre>
+<p><img src="/post/2019-05-29-weather-data_files/figure-html/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br></p>
+</div>
+<div id="retrieve-weather-data" class="section level1">
+<h1>Retrieve Weather Data</h1>
+<p>Now that we know what weather station we want to focus on, we can retrive all of the data for that station.</p>
+<pre class="r"><code># Retrieve weather data for station IGX ----
+weather_dat &lt;- riem_measures(station = &quot;IGX&quot;)</code></pre>
+<p><br></p>
+<p>UH-OH! Data shows that readings stopped in April 2018. A quick Google search revealed that the airport was actually closed in May 2018! Looks like we will need to try something else!</p>
+<p><br></p>
+</div>
+<div id="next-closest-station" class="section level1">
+<h1>Next Closest Station</h1>
+<p>Maybe we can do some more geoprocessing and find the next closest station. Let’s start with that and then check out the results.</p>
+<pre class="r"><code># Compute distances of stations from Chapel Hill center
+stations &lt;- chapel_hill %&gt;%
+  st_centroid() %&gt;%
+  st_distance(stations, by_element = TRUE) %&gt;%
+  as.integer %&gt;%
+  cbind(stations) %&gt;%
+  rename(distance = &quot;.&quot;)
+
+# Check out the results
+stations %&gt;%
+  as_tibble() %&gt;%
+  select(-geometry) %&gt;%
+  top_n(-3, distance) %&gt;%
+  arrange(distance) %&gt;%
+  kable(col.names = c(&quot;Distance&quot;, &quot;Station ID&quot;, &quot;Name&quot;)) %&gt;%
+  kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Distance
+</th>
+<th style="text-align:left;">
+Station ID
+</th>
+<th style="text-align:left;">
+Name
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2384
+</td>
+<td style="text-align:left;">
+IGX
+</td>
+<td style="text-align:left;">
+WILLIAMS_AIRPORT_(ASOS)
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+23351
+</td>
+<td style="text-align:left;">
+RDU
+</td>
+<td style="text-align:left;">
+RALEIGH-DURHAM_(ASOS)
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+38880
+</td>
+<td style="text-align:left;">
+TTA
+</td>
+<td style="text-align:left;">
+SANFORD-LEE_COUNTY_RGNL_AIRPORT
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="weather-data-one-more-time" class="section level1">
+<h1>Weather Data One More Time</h1>
+<p>Looks like RDU is the next closest weather station to the center of Chapel Hill. Let’s go get the weather data for that station now.</p>
+<pre class="r"><code># Retrieve weather data again ----
+weather_dat &lt;- riem_measures(station = &quot;RDU&quot;)</code></pre>
+<p><br></p>
+<p>Awesome stuff! Now we can play around with the weather data a bit.</p>
+</div>
+<div id="monthly-average-temperature" class="section level1">
+<h1>Monthly Average Temperature</h1>
+<pre class="r"><code>weather_dat %&gt;%
+  filter(is.na(tmpf) != TRUE) %&gt;%
+  mutate(valid = lubridate::floor_date(valid, unit = &quot;month&quot;)) %&gt;%
+  group_by(valid) %&gt;%
+  summarise(avg_temp = mean(tmpf)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(valid, avg_temp)) +
+  geom_line(color = &quot;#112E51&quot;) +
+  geom_point(size = 3, color = &quot;#FF7043&quot;) +
+  labs(x = NULL, y = NULL) +
+  theme(panel.background = element_blank())</code></pre>
+<p><img src="/post/2019-05-29-weather-data_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br></p>
+</div>
+<div id="daily-highs-and-lows" class="section level1">
+<h1>Daily Highs and Lows</h1>
+<pre class="r"><code>highs &lt;- weather_dat %&gt;%
+  filter(is.na(tmpf) != TRUE) %&gt;%
+  mutate(valid = lubridate::floor_date(valid, unit = &quot;day&quot;)) %&gt;%
+  group_by(valid) %&gt;%
+  top_n(1, tmpf) %&gt;%
+  summarise(high = mean(tmpf)) %&gt;%
+  ungroup()
+
+lows &lt;- weather_dat %&gt;%
+  filter(is.na(tmpf) != TRUE) %&gt;%
+  mutate(valid = lubridate::floor_date(valid, unit = &quot;day&quot;)) %&gt;%
+  group_by(valid) %&gt;%
+  top_n(-1, tmpf) %&gt;%
+  summarise(low = mean(tmpf)) %&gt;%
+  ungroup()
+
+highs %&gt;%
+  left_join(lows, by = &quot;valid&quot;) %&gt;%
+  gather(&quot;key&quot;, &quot;value&quot;, 2:3) %&gt;%
+  ggplot(aes(valid, value, color = key)) +
+  geom_line() +
+  labs(x = NULL, y = NULL) +
+  scale_color_manual(name = &quot;Categories&quot;, values = c(&quot;#112E51&quot;, &quot;#FF7043&quot;)) +
+  theme(panel.background = element_blank())</code></pre>
+<p><img src="/post/2019-05-29-weather-data_files/figure-html/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br></p>
+</div>
+<div id="high-and-low-differences-monthly-variance" class="section level1">
+<h1>High and Low Differences, Monthly Variance</h1>
+<pre class="r"><code>highs %&gt;%
+  left_join(lows, by = &quot;valid&quot;) %&gt;%
+  mutate(diff = high - low) %&gt;%
+  mutate(valid = lubridate::floor_date(valid, unit = &quot;month&quot;)) %&gt;%
+  group_by(valid) %&gt;%
+  summarise(variance = var(diff)) %&gt;%
+  ggplot(aes(valid, variance)) +
+  geom_line(color = &quot;#112E51&quot;) +
+  geom_point(size = 3, color = &quot;#FF7043&quot;) +
+  labs(x = NULL, y = NULL) +
+  theme(panel.background = element_blank())</code></pre>
+<p><img src="/post/2019-05-29-weather-data_files/figure-html/unnamed-chunk-11-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><br>
+<br></p>
+</div>
+
+    </div>
+
+    
+
+    
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  <img class="portrait mr-3" src="/img/headshot.png" itemprop="image" alt="Avatar">
+  
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/">Jason Jones</a></h5>
+    <h6 class="card-subtitle">Analytics &amp; Innovation Manager</h6>
+    
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="/#contact" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://twitter.com/packpridejones" target="_blank" rel="noopener">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.linkedin.com/in/jason-jones-b32aab5a" target="_blank" rel="noopener">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/jasonajones73" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+
+    
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+  <p class="powered-by">
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
+  
+
+  <p class="powered-by">
+    &copy; 2018 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "Search Results",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    <script src="/js/search.js"></script>
+    
+
+    
+    
+
+  </body>
+</html>
+
